@@ -181,7 +181,8 @@
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="startDate" today-btn  @update:model-value="onStartDate">
+                                    
+                                    <q-date v-model="startDate" today-btn   @update:model-value="onStartDate">
                                         <div class="row items-center justify-end">
                                             <q-btn v-close-popup label="Close" color="primary" flat />
                                         </div>
@@ -197,7 +198,7 @@
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="endDate" today-btn @update:model-value="onEndDate">
+                                    <q-date v-model="endDate" today-btn   @update:model-value="onEndDate">
                                         <div class="row items-center justify-end">
                                             <q-btn v-close-popup label="Close" color="primary" flat />
                                         </div>
@@ -286,12 +287,13 @@
 </template>
 
 <script setup lang="ts">
+
     const tableRef = ref()
     const rows = ref()
     const filter = ref('')
     const selected = ref([])
     let branchSelected = ref('ALL')
-    let listBranchOption = ref('ALL')
+    let listBranchOption = ref(['ALL'])
     
     const pagination= ref({
         sortBy: 'desc',
@@ -315,6 +317,10 @@
     let endDate = ref('')
     const endDay = ref()
     const totalDay = ref()
+
+
+
+
 
     const columns = [
         {name: 'index', label: 'No', field: 'index', align: 'left', sortable: true},
@@ -353,6 +359,16 @@
         const filter = props.filter    
 
         console.log("Execute here")
+
+        //Set startDate and endDate is today        
+        let yourDate = new Date()
+        const nowToday = yourDate.toISOString().split('T')[0]
+        console.log("youDate",nowToday)
+
+        startDate.value = nowToday
+        endDate.value = nowToday
+        // endDate.value = today
+
         // console.log("page:",page)
         // console.log("rowsPerPage:",rowsPerPage)
         
@@ -461,25 +477,25 @@
 
 
             
-            // if(listBranchOption.value.length == 0){
-            //     listBranchOption.value.push(row.device.branch.branchName)
-            //     // console.log("Add New1: ",row.device.branch.branchName)
-            // }else{
-            //     listBranchOption.value.forEach((option,inx) => {
-            //         // console.log("Branch Now: ",row.device.branch.branchName)
-            //         if(!listBranchOption.value.includes(row.device.branch.branchName)){
-            //             listBranchOption.value.push(row.device.branch.branchName)
-            //             // console.log("Add New2: ",row.device.branch.branchName)
-            //         }else{
-            //             // console.log("Found: ",option)
-            //         }
-            //     })
-            //     // if(row.device.branch.branchName !== listBranchOption.reduce(myFunction)){
-            //     //     listBranchOption.push(row.device.branch.branchName)
-            //     // }
-            //     // console.log("new item:", listBranchOption.filter(myFunction))
-            //     // console.log("return: ",listBranchOption.reduce(myFunction))
-            // }
+            if(listBranchOption.value.length == 0){
+                listBranchOption.value.push(row.device.branch.branchName)
+                // console.log("Add New1: ",row.device.branch.branchName)
+            }else{
+                listBranchOption.value.forEach((option,inx) => {
+                    // console.log("Branch Now: ",row.device.branch.branchName)
+                    if(!listBranchOption.value.includes(row.device.branch.branchName)){
+                        listBranchOption.value.push(row.device.branch.branchName)
+                        // console.log("Add New2: ",row.device.branch.branchName)
+                    }else{
+                        // console.log("Found: ",option)
+                    }
+                })
+                // if(row.device.branch.branchName !== listBranchOption.reduce(myFunction)){
+                //     listBranchOption.push(row.device.branch.branchName)
+                // }
+                // console.log("new item:", listBranchOption.filter(myFunction))
+                // console.log("return: ",listBranchOption.reduce(myFunction))
+            }
             
         })
 
@@ -557,7 +573,7 @@
         console.log("Details:",details)
 
         //Trigger request to server. It will execute onRequest function
-        
+        // /api/transaction/recordsCount?filter=ALL&startDate=15-07-2024&endDate=21-07-2024"
     }
 
 

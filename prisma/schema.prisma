@@ -99,3 +99,52 @@ model Transactions{
     updatedAt       DateTime?       @updatedAt 
 }
 
+model CyberpayPaymentRequest {
+  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  // Partner             CyberpayPartner     @relation(fields: [partner_id], references:[partner_id])
+  // partner_id          String              @unique
+  partner_id          String
+  payment_channel_id  String
+  ref_1               String              @unique
+  ref_2               String
+  ref_3               String
+  amount              Float
+  qrText              String
+  qrImage             String
+  paidNotify          CyberpayPaidNotify[]
+  createdAt           DateTime        @db.Date @default(now())
+}
+
+model CyberpayPaidNotify {
+  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  Partner             CyberpayPartner     @relation(fields: [partner_id], references:[partner_id])
+  partner_id          String              @unique
+  payment_channel_id  String
+  transaction_id      String
+  payment_ref1        CyberpayPaymentRequest  @relation(fields:[ref_1], references:[ref_1])      
+  ref_1               String    
+  ref_2               String
+  ref_3               String
+  service_fee         Float
+  bank_code           String
+  createdAt           DateTime                @db.Date @default(now())
+  notifySent          CyberpayNotifySent?     
+}
+
+model CyberpayNotifySent {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  paidNotify          CyberpayPaidNotify?    @relation(fields:[paidNotify_id], references:[id])
+  paidNotify_id       String               @db.ObjectId  @unique
+  targetURL           String
+  createdAt           DateTime        @db.Date @default(now())
+}
+
+model CyberpayPartner {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  partner_id          String          @unique
+  paidNotify          CyberpayPaidNotify?
+  // paymentRequest      CyberpayPaymentRequest?
+  secretKey           String
+}
+
+
