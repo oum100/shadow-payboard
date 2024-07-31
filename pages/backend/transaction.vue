@@ -181,8 +181,9 @@
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                    
-                                    <q-date v-model="startDate" today-btn   @update:model-value="onStartDate">
+                                    <q-date v-model="startDate" today-btn   
+                                        @update:model-value="onStartDate"
+                                    >
                                         <div class="row items-center justify-end">
                                             <q-btn v-close-popup label="Close" color="primary" flat />
                                         </div>
@@ -365,8 +366,17 @@
         const nowToday = yourDate.toISOString().split('T')[0]
         console.log("youDate",nowToday)
 
-        startDate.value = nowToday
-        endDate.value = nowToday
+        if (!startDate.value){
+            startDate.value = nowToday
+        }
+
+        if((!endDate.value)){
+            endDate.value = nowToday
+        }
+
+
+        // startDate.value = nowToday
+        // endDate.value = nowToday
         // endDate.value = today
 
         // console.log("page:",page)
@@ -422,8 +432,8 @@
                 "page":startRow,
                 "rowsPerPage":rowsPerPage,
                 "rowsNumber":fetchCount,
-                "startDate":startDate.value,
-                "endDate":endDate.value
+                "startDate":startDate.value ,
+                "endDate":endDate.value 
             }
         })
         console.log("Data: ",dataTable);
@@ -544,33 +554,30 @@
     }
 
     function onStartDate(value:any,reason:any,details:any){
-        console.log("onStartDate Function")
-
-        startDay.value = details.day
-        console.log("Value:",value)
-        console.log("Reason:",reason)
-        console.log("Details:",details)
-
+        // startDay.value = details.day
+        console.log("onStartDate->Value:",value)
+        console.log("onStartDate->Reason:",reason)
+        console.log("onStartDate->Details:",details)
+       
         if(startDay && endDay){
             totalDay.value = endDay.value - startDay.value
             tableRef.value.requestServerInteraction()
-            console.log("TotalDay: ",totalDay)
+            console.log("onStartDate->TotalDay: ",totalDay)
         }
     }
 
     function onEndDate(value:any,reason:any,details:any){
-        console.log("onEndDate Function")
-
-        endDay.value = details.day
+        // endDay.value = details.day
+        console.log("onEndDate->Value:",value)
+        console.log("onEndDate->Reason:",reason)
+        console.log("onEndDate->Details:",details)
 
         if(startDay && endDay){
             totalDay.value = endDay.value - startDay.value
             tableRef.value.requestServerInteraction()
-            console.log("TotalDay: ",totalDay)
+            console.log("onEndDate->TotalDay: ",totalDay)
         }
-        console.log("Value:",value)
-        console.log("Reason:",reason)
-        console.log("Details:",details)
+
 
         //Trigger request to server. It will execute onRequest function
         // /api/transaction/recordsCount?filter=ALL&startDate=15-07-2024&endDate=21-07-2024"
