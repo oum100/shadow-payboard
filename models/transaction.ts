@@ -2,10 +2,11 @@ import Joi, { number, string } from 'joi'
 
 export async function validateNewTrans(body:any){
     const schema = Joi.object({
-        order: Joi.string().required(),
+        order: Joi.string(),
         deviceUuid: Joi.string().required(),
-        amount: Joi.string().required(),
+        amount: Joi.number().required(),
         status: Joi.string().required(),
+        paymentBy: Joi.string()
     }).unknown(true)
     return schema.validate(body)
 }

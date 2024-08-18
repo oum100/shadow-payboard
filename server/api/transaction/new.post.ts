@@ -1,10 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import Debug from 'debug'
 import { validateNewTrans} from "~/models/transaction"
-
+import { customAlphabet } from 'nanoid'
 
 const prisma = new PrismaClient();
 const debug = Debug('api:transaction:new');
+const alphabet = '0123456789ABCDEF';
+const nanoid = customAlphabet(alphabet, 15);
 
 export default defineEventHandler(async(event) => {
     const body = await readBody(event)
@@ -17,13 +19,15 @@ export default defineEventHandler(async(event) => {
             stack:''
         })   
     }
+    const genOrderId = nanoid(15)
 
     const trans = await prisma.transactions.create({
         data:{
-            order: body.order,
+            order: body.order || genOrderId ,
             deviceUuid: body.deviceUuid,
             amount: body.amount,
-            status: body.status
+            status: body.status,
+            paymentBy: body.paymentBy
         }
     })
 

@@ -252,12 +252,12 @@
                 </q-td>
             </template>
 
-            <template #body-cell-payBy="props">
+            <template #body-cell-paymentBy="props">
                 <q-td :props="props" auto-width>
                     <div class="text-start">
                         <q-icon name="qr_code_2" v-if="props.row.paymentBy == 'qrcode'" size="2em"/>
-                        <q-icon name="monetization_on" v-else-if="props.row.payBy === 'cash'" size="2em"/>
-                        <q-icon name="undo" v-else-if="props.row.paymentBy === 'refund'" size="2em"/>
+                        <q-icon name="monetization_on" v-else-if="props.row.paymentBy == 'cash'" size="2em"/>
+                        <q-icon name="undo" v-else-if="props.row.paymentBy == 'refund'" size="2em"/>
                         <q-icon name="minimize" size="2em" v-else />
                     </div>
                 </q-td>
@@ -331,8 +331,8 @@
         {name: 'order', label: 'Order ID', field: 'order', align: 'left', sortable: true},
         {name: 'uuid', label: 'UUID', field: 'deviceUuid', align: 'left', sortable: false},
         {name: 'type', label: 'Machine', field: 'type', align: 'left', sortable: true},
-        {name: 'price', label: 'Price', field: 'amount', align: 'left', sortable: false},
-        {name: 'payBy', label: 'Pay by', field: 'paymentBy', align: 'left', sortable: false},
+        {name: 'price', label: 'Price', field: 'amount', align: 'right', sortable: false},
+        {name: 'paymentBy', label: 'Payment By', field: 'paymentBy', align: 'center', sortable: false},
         {name: 'status', label: 'Status', field: 'status', align: 'left', sortable: false},
         {name: 'jobState', label: 'Job State', field: 'jobState', align: 'left', sortable: false},
         {name: 'actions', label: 'Actions', field: 'actions', align: 'center', sortable: false}
@@ -374,6 +374,18 @@
             endDate.value = nowToday
         }
 
+        //Making Branch List
+        const optionList = await $fetch('/api/transaction/listBranchOption')
+        console.log(optionList)
+
+        // partnerResult.value?.data.forEach((item: any) => {
+        //     // console.log("Each Item:",item)
+        //     listPartnerOption.value.push(item)
+        // })
+        listBranchOption = ref(['ALL'])
+        optionList.forEach((item:any)=>{
+            listBranchOption.value.push(item.branchName)
+        })
 
         // startDate.value = nowToday
         // endDate.value = nowToday
@@ -487,25 +499,25 @@
 
 
             
-            if(listBranchOption.value.length == 0){
-                listBranchOption.value.push(row.device.branch.branchName)
-                // console.log("Add New1: ",row.device.branch.branchName)
-            }else{
-                listBranchOption.value.forEach((option,inx) => {
-                    // console.log("Branch Now: ",row.device.branch.branchName)
-                    if(!listBranchOption.value.includes(row.device.branch.branchName)){
-                        listBranchOption.value.push(row.device.branch.branchName)
-                        // console.log("Add New2: ",row.device.branch.branchName)
-                    }else{
-                        // console.log("Found: ",option)
-                    }
-                })
-                // if(row.device.branch.branchName !== listBranchOption.reduce(myFunction)){
-                //     listBranchOption.push(row.device.branch.branchName)
-                // }
-                // console.log("new item:", listBranchOption.filter(myFunction))
-                // console.log("return: ",listBranchOption.reduce(myFunction))
-            }
+            // if(listBranchOption.value.length == 0){
+            //     listBranchOption.value.push(row.device.branch.branchName)
+            //     // console.log("Add New1: ",row.device.branch.branchName)
+            // }else{
+            //     listBranchOption.value.forEach((option,inx) => {
+            //         // console.log("Branch Now: ",row.device.branch.branchName)
+            //         if(!listBranchOption.value.includes(row.device.branch.branchName)){
+            //             listBranchOption.value.push(row.device.branch.branchName)
+            //             // console.log("Add New2: ",row.device.branch.branchName)
+            //         }else{
+            //             // console.log("Found: ",option)
+            //         }
+            //     })
+            //     // if(row.device.branch.branchName !== listBranchOption.reduce(myFunction)){
+            //     //     listBranchOption.push(row.device.branch.branchName)
+            //     // }
+            //     // console.log("new item:", listBranchOption.filter(myFunction))
+            //     // console.log("return: ",listBranchOption.reduce(myFunction))
+            // }
             
         })
 
