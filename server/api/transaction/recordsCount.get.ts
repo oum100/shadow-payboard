@@ -25,6 +25,17 @@ export default defineEventHandler(async(event)=>{
         console.log("RecordsCount->starDate: ",startDate)
         console.log("RecordsCount->endDate: ",endDate)
 
+        // startDate = new Date(
+        //     startDate.getFullYear(),
+        //     startDate.getMonth(),
+        //     startDate.getDate(),
+        //     startDate.getHours(),
+        //     startDate.getMinutes(),
+        // )
+
+        // console.log("RecordsCount->starDate->2: ",startDate)
+        // console.log("RecordsCount->endDate->2: ",endDate)
+
         // startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
         // endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
 

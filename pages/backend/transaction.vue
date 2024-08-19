@@ -354,6 +354,7 @@
 </template>
 
 <script setup lang="ts">
+    import { date } from 'quasar'
 
     const tableRef = ref()
     const rows = ref()
@@ -429,42 +430,51 @@
 
         //Set startDate and endDate is today        
         let yourDate = new Date()
+        console.log("newDate: ",yourDate)
 
         // let nowToday = yourDate.toISOString().split('T')[0]
         let nowToday = yourDate.toLocaleString()
+        
 
         // const nowToday = yourDate.toISOString()
-        console.log("youDate",nowToday)
+        console.log("yourDate",nowToday)
 
         if (!startDate.value){
-            startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
-                'sv-SE',
-                { 
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12:false,
-                    // timeStyle:'short'
-                }
-            )
+            yourDate.setHours(0)
+            yourDate.setMinutes(0)
+            startDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
+            // startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
+            //     'sv-SE',
+            //     { 
+            //         year: 'numeric',
+            //         month: '2-digit',
+            //         day: '2-digit',
+            //         hour: '2-digit',
+            //         minute: '2-digit',
+            //         hour12:false,
+            //         // timeStyle:'short'
+            //     }
+            // )
             console.log("Start Date: ",startDate.value)
         }
 
         if((!endDate.value)){
-            endDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),23,59).toLocaleString(
-                'sv-SE',
-                { 
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12:false,
-                    // timeStyle:'short'
-                }                
-            )
+            yourDate.setHours(23)
+            yourDate.setMinutes(59)
+            endDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
+            // endDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),23,59).toLocaleString(
+            //     'sv-SE',
+            //     { 
+            //         year: 'numeric',
+            //         month: '2-digit',
+            //         day: '2-digit',
+            //         hour: '2-digit',
+            //         minute: '2-digit',
+            //         hour12:false,
+            //         // timeStyle:'short'
+            //     }                
+            // )
+            console.log("End Date: ",endDate.value)
         }
 
         //Making Branch List
