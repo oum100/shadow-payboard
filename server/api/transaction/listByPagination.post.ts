@@ -27,8 +27,8 @@ export default defineEventHandler( async(event) => {
         startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
         endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
         
-        // console.log("start: ",startTime)
-        // console.log("end: ",endTime)
+        console.log("start: ",startTime)
+        console.log("end: ",endTime)
     }
 
 
@@ -95,10 +95,10 @@ export default defineEventHandler( async(event) => {
                 createdAt: "desc"
             },
             where:{
-                // AND:[
-                //     {createdAt: { gte: startTime } },
-                //     {createdAt: { lte: endTime } },
-                // ],  
+                AND:[
+                    {createdAt: { gte: startTime } },
+                    {createdAt: { lte: endTime } },
+                ],  
                 device:{
                     AND:[
                         {merchant:{merchantCode: body.merchantCode}},
