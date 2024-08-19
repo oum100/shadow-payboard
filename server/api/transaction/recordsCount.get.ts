@@ -21,11 +21,14 @@ export default defineEventHandler(async(event)=>{
     if(query.startDate && query.endDate){
         const startDate = new Date(String(sDate))
         const endDate = new Date(String(eDate))
+        console.log("RecordsCount->starDate: ",startDate)
+        console.log("RecordsCount->endDate: ",endDate)
+
         startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
         endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
         
-        // console.log("start: ",startTime)
-        // console.log("end: ",endTime)
+        console.log("RecordsCount->starTimet: ",startTime)
+        console.log("RecordsCount->endTime: ",endTime)
     }
 
     if(filter === "ALL"){
