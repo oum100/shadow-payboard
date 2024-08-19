@@ -51,10 +51,10 @@ export default defineEventHandler( async(event) => {
                 createdAt: "desc"
             },
             where:{
-                AND:[
-                    {createdAt: { gte: startTime } },
-                    {createdAt: { lte: endTime } },
-                ],  
+                createdAt:{
+                    gte: startTime,
+                    lt: endTime
+                },  
                 device:{
                     AND:[
                         {merchant:{merchantCode: body.merchantCode}}
@@ -97,10 +97,10 @@ export default defineEventHandler( async(event) => {
                 createdAt: "desc"
             },
             where:{
-                AND:[
-                    {createdAt: { gte: startTime } },
-                    {createdAt: { lte: endTime } },
-                ],  
+                createdAt:{
+                    gte: startTime,
+                    lt: endTime
+                }, 
                 device:{
                     AND:[
                         {merchant:{merchantCode: body.merchantCode}},

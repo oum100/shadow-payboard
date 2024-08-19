@@ -37,11 +37,11 @@ export default defineEventHandler(async(event)=>{
 
     if(filter === "ALL"){
         const count = await prisma.transactions.aggregate({
-            where:{
-                AND:[
-                    {createdAt: { gte: startTime } },
-                    {createdAt: { lte: endTime } },
-                ],  
+            where:{ 
+                createdAt:{
+                    gte: startTime,
+                    lt: endTime
+                }
             },
             _count: true,
             _sum:{
@@ -50,10 +50,10 @@ export default defineEventHandler(async(event)=>{
         })
         const washerCount = await prisma.transactions.aggregate({
             where:{
-                AND:[
-                    {createdAt: { gte: startTime } },
-                    {createdAt: { lte: endTime } },
-                ], 
+                createdAt:{
+                    gte: startTime,
+                    lt: endTime
+                },
                 device:{
                     type: "Washer"
                 }
@@ -66,10 +66,10 @@ export default defineEventHandler(async(event)=>{
         })
         const dryerCount = await prisma.transactions.aggregate({
             where:{
-                AND:[
-                    {createdAt: { gte: startTime } },
-                    {createdAt: { lte: endTime } },
-                ], 
+                createdAt:{
+                    gte: startTime,
+                    lt: endTime
+                },
                 device:{
                     type: "Dryer"
                 }
@@ -91,10 +91,10 @@ export default defineEventHandler(async(event)=>{
     // This for count record by branchName
     const count = await prisma.transactions.aggregate({
         where:{
-            AND:[
-                {createdAt: { gte: startTime } },
-                {createdAt: { lte: endTime } },
-            ], 
+            createdAt:{
+                gte: startTime,
+                lt: endTime
+            },
             device:{
                 branch:{branchName: String(filter)}
             }
@@ -107,10 +107,10 @@ export default defineEventHandler(async(event)=>{
 
     const washerCount = await prisma.transactions.aggregate({
         where:{
-            AND:[
-                {createdAt: { gte: startTime } },
-                {createdAt: { lte: endTime } },
-            ], 
+            createdAt:{
+                gte: startTime,
+                lt: endTime
+            },
             device:{
                 branch:{branchName: String(filter)},
                 type: "Washer"
@@ -124,10 +124,10 @@ export default defineEventHandler(async(event)=>{
     })
     const dryerCount = await prisma.transactions.aggregate({
         where:{
-            AND:[
-                {createdAt: { gte: startTime } },
-                {createdAt: { lte: endTime } },
-            ], 
+            createdAt:{
+                gte: startTime,
+                lt: endTime
+            },
             device:{
                 branch:{branchName: String(filter)},
                 type: "Dryer"
