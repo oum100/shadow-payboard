@@ -14,8 +14,8 @@ export default defineEventHandler(async(event)=>{
     const eDate = query.endDate
 
     // console.log("query:",query)
-    // console.log("sDate::",sDate)
-    // console.log("eDate::",eDate)
+    console.log("sDate::",sDate)
+    console.log("eDate::",eDate)
 
     let startTime, endTime, startDate, endDate
     if(query.startDate && query.endDate){
@@ -25,22 +25,22 @@ export default defineEventHandler(async(event)=>{
         console.log("RecordsCount->starDate: ",startDate)
         console.log("RecordsCount->endDate: ",endDate)
 
-        startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
-        endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
+        // startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
+        // endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
 
-        startTime = startTime.toISOString()
-        endTime = endTime.toISOString()
+        // startTime = startTime.toISOString()
+        // endTime = endTime.toISOString()
         
-        console.log("RecordsCount->starTimet: ",startTime)
-        console.log("RecordsCount->endTime: ",endTime)
+        // console.log("RecordsCount->starTimet: ",startTime)
+        // console.log("RecordsCount->endTime: ",endTime)
     }
 
     if(filter === "ALL"){
         const count = await prisma.transactions.aggregate({
             where:{ 
                 createdAt:{
-                    gte: startTime,
-                    lt: endTime
+                    gte: startDate,
+                    lt: endDate
                 }
             },
             _count: true,
@@ -51,8 +51,8 @@ export default defineEventHandler(async(event)=>{
         const washerCount = await prisma.transactions.aggregate({
             where:{
                 createdAt:{
-                    gte: startTime,
-                    lt: endTime
+                    gte: startDate,
+                    lt: endDate
                 },
                 device:{
                     type: "Washer"
@@ -67,8 +67,8 @@ export default defineEventHandler(async(event)=>{
         const dryerCount = await prisma.transactions.aggregate({
             where:{
                 createdAt:{
-                    gte: startTime,
-                    lt: endTime
+                    gte: startDate,
+                    lt: endDate
                 },
                 device:{
                     type: "Dryer"
@@ -92,8 +92,8 @@ export default defineEventHandler(async(event)=>{
     const count = await prisma.transactions.aggregate({
         where:{
             createdAt:{
-                gte: startTime,
-                lt: endTime
+                gte: startDate,
+                lt: endDate
             },
             device:{
                 branch:{branchName: String(filter)}
@@ -108,8 +108,8 @@ export default defineEventHandler(async(event)=>{
     const washerCount = await prisma.transactions.aggregate({
         where:{
             createdAt:{
-                gte: startTime,
-                lt: endTime
+                gte: startDate,
+                lt: endDate
             },
             device:{
                 branch:{branchName: String(filter)},
@@ -125,8 +125,8 @@ export default defineEventHandler(async(event)=>{
     const dryerCount = await prisma.transactions.aggregate({
         where:{
             createdAt:{
-                gte: startTime,
-                lt: endTime
+                gte: startDate,
+                lt: endDate
             },
             device:{
                 branch:{branchName: String(filter)},

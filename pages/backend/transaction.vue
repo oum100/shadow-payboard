@@ -166,7 +166,7 @@
             <template #top>
                 <div class ="col-3 text-h4 text-blue">{{ branchSelected }} transactions  </div>
                 <q-space/>
-                <div class="q-mx-md q-guttar-md" style="max-width: 200px">
+                <div class="q-mx-md q-guttar-md" style="max-width: 230px">
                     <q-select filled dense 
                         v-model="branchSelected" 
                         :options="listBranchOption" 
@@ -176,13 +176,45 @@
                     />
                 </div>
 
-                <div class="q-mx-md q-guttar-md" style="max-width: 200px">
+                <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:210px">
                     <q-input filled dense v-model="startDate" label="Start Date" >
+                        <template v-slot:prepend>
+                            <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="startDate" mask="YYYY-MM-DD HH:mm"
+                                    format24h
+                                    @update:model-value="onStartDate"
+                                >
+                                <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                </div>
+                                </q-date>
+                            </q-popup-proxy>
+                            </q-icon>
+                        </template>
+
                         <template v-slot:append>
+                            <q-icon name="access_time" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-time v-model="startDate" mask="YYYY-MM-DD HH:mm" 
+                                    format24h
+                                    @update:model-value="onStartDate"
+                                >
+                                <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                </div>
+                                </q-time>
+                            </q-popup-proxy>
+                            </q-icon>
+                        </template>
+
+                        <!-- <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="startDate" today-btn   
+                                    <q-date v-model="startDate" 
+                                        today-btn   
                                         @update:model-value="onStartDate"
+                                        mask="YYYY-MM-DD HH:mm"
                                     >
                                         <div class="row items-center justify-end">
                                             <q-btn v-close-popup label="Close" color="primary" flat />
@@ -190,27 +222,61 @@
                                     </q-date>
                                 </q-popup-proxy>
                             </q-icon>
-                        </template>
+                        </template> -->
                     </q-input>
                 </div>
 
-                <div class="q-mx-md q-guttar-md" style="max-width: 200px">
+                <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:210px">
                     <q-input filled dense v-model="endDate" label="End Date" >
+                        <template v-slot:prepend>
+                            <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="endDate" mask="YYYY-MM-DD HH:mm"
+                                    format24h
+                                    @update:model-value="onEndDate"  
+                                >
+                                <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                </div>
+                                </q-date>
+                            </q-popup-proxy>
+                            </q-icon>
+                        </template>
+
                         <template v-slot:append>
+                            <q-icon name="access_time" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-time v-model="endDate" mask="YYYY-MM-DD HH:mm" 
+                                    format24h
+                                    @update:model-value="onEndDate"
+                                >
+                                <div class="row items-center justify-end">
+                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                </div>
+                                </q-time>
+                            </q-popup-proxy>
+                            </q-icon>
+                        </template>
+
+                        <!-- <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="endDate" today-btn   @update:model-value="onEndDate">
+                                    <q-date v-model="endDate" today-btn   
+                                        @update:model-value="onEndDate"
+                                        mask="YYYY-MM-DD HH:mm" format24h
+                                        color="orange"
+                                    >
                                         <div class="row items-center justify-end">
                                             <q-btn v-close-popup label="Close" color="primary" flat />
                                         </div>
                                     </q-date>
                                 </q-popup-proxy>
                             </q-icon>
-                        </template>
+                        </template> -->
                     </q-input>
                 </div>
 
-                <div class="q-mx-md q-guttar-md" style="max-width: 200px">
+                <div class="q-mx-md q-guttar-md" style="max-width: 230px">
                     <q-btn icon="restart_alt" title="Set filter to default" @click="resetFilter">Reset Filter</q-btn>
                 </div>
 
@@ -363,15 +429,42 @@
 
         //Set startDate and endDate is today        
         let yourDate = new Date()
-        const nowToday = yourDate.toISOString().split('T')[0]
+
+        // let nowToday = yourDate.toISOString().split('T')[0]
+        let nowToday = yourDate.toLocaleString()
+
+        // const nowToday = yourDate.toISOString()
         console.log("youDate",nowToday)
 
         if (!startDate.value){
-            startDate.value = nowToday
+            startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
+                'sv-SE',
+                { 
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12:false,
+                    // timeStyle:'short'
+                }
+            )
+            console.log("Start Date: ",startDate.value)
         }
 
         if((!endDate.value)){
-            endDate.value = nowToday
+            endDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),23,59).toLocaleString(
+                'sv-SE',
+                { 
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12:false,
+                    // timeStyle:'short'
+                }                
+            )
         }
 
         //Making Branch List
@@ -401,15 +494,15 @@
         pagination.value.rowsNumber = totalResult.totalCount._count
         console.log("pagination-rowsNumber: ", pagination.value.rowsNumber)
 
-        transTotal.value = new Intl.NumberFormat('en-IN').format(pagination.value.rowsNumber)
-        transWasher.value = new Intl.NumberFormat('en-IN').format(totalResult.washerCount._count)
-        transDryer.value = new Intl.NumberFormat('en-IN').format(totalResult.dryerCount._count)
+        transTotal.value = new Intl.NumberFormat('en-US').format(pagination.value.rowsNumber)
+        transWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washerCount._count)
+        transDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryerCount._count)
 
         // revenue.value = totalResult.totalCount._sum.amount
-        revenue.value = new Intl.NumberFormat('en-IN').format(totalResult.totalCount._sum.amount)
+        revenue.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount._sum.amount)
 
-        revenueWasher.value = new Intl.NumberFormat('en-IN').format(totalResult.washerCount._sum.amount)
-        revenueDryer.value = new Intl.NumberFormat('en-IN').format(totalResult.dryerCount._sum.amount)
+        revenueWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washerCount._sum.amount)
+        revenueDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryerCount._sum.amount)
 
         // pagination.value.rowsNumber = await getRowsNumberCount(filter)
 

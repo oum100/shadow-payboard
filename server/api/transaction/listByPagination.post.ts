@@ -20,17 +20,18 @@ export default defineEventHandler( async(event) => {
 
 
 
-    let startTime, endTime
+    let startTime, endTime, startDate, endDate
     if(body.startDate && body.endDate){
-        const startDate = new Date(body.startDate)
-        const endDate = new Date(body.endDate)
-        startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
-        endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
+        startDate = new Date(body.startDate)
+        endDate = new Date(body.endDate)
+
+        // startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
+        // endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
         
-        // console.log("ListByPage->start: ",startTime)
-        // console.log("ListByPage->end: ",endTime)
-        startTime = startTime.toISOString()
-        endTime = endTime.toISOString()
+        // // console.log("ListByPage->start: ",startTime)
+        // // console.log("ListByPage->end: ",endTime)
+        // startTime = startTime.toISOString()
+        // endTime = endTime.toISOString()
     }
 
 
@@ -52,8 +53,8 @@ export default defineEventHandler( async(event) => {
             },
             where:{
                 createdAt:{
-                    gte: startTime,
-                    lt: endTime
+                    gte: startDate,
+                    lt: endDate
                 },  
                 device:{
                     AND:[
@@ -98,8 +99,8 @@ export default defineEventHandler( async(event) => {
             },
             where:{
                 createdAt:{
-                    gte: startTime,
-                    lt: endTime
+                    gte: startDate,
+                    lt: endDate
                 }, 
                 device:{
                     AND:[
