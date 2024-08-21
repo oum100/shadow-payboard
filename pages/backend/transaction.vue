@@ -435,8 +435,13 @@
 
         //Set startDate and endDate is today        
         let yourDate = new Date()
-        console.log("yourDate Now",yourDate)
-        console.log("utcDate: ",new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate())))
+        console.log("yourDate 1",yourDate)
+
+        yourDate =new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth()))
+        console.log("yourDate 2",yourDate)
+        // console.log("utcDate: ",new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),
+        // yourDate.getHours(),yourDate.getMinutes()
+        // )))
 
         // let nowToday = yourDate.toISOString().split('T')[0]
         // let nowToday = yourDate.toLocaleString()
@@ -448,7 +453,6 @@
         if (!startDate.value){
             yourDate.setHours(0)
             yourDate.setMinutes(0)
-            console.log("yourDate TZ:", yourDate.getTimezoneOffset())
             // yourDate.toISOString()
             startDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
             // startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
