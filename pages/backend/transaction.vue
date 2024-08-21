@@ -7,7 +7,7 @@
                         <div class = "row">
                             <div class="col-12">
                                 <div class="row text-h6">
-                                    Transaction: &nbsp<span>{{ transTotal }}</span>
+                                    Transactions: &nbsp<span>{{ transTotal }}</span>
                                 </div>
                             </div>
                         </div>
@@ -29,13 +29,13 @@
                             <div class="col-6">
                                 <div class="row text-subtitle1">
                                     <q-icon name="qr_code_2" size="28px"/>
-                                    QR:&nbsp<span></span>
+                                    QR:&nbsp<span>{{ counterQR }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row text-subtitle1">
-                                    <q-icon name="attach_money" size="28px"/>
-                                    Cash:&nbsp<span></span>
+                                    <q-icon name="paid" size="28px"/>
+                                    Cash:&nbsp<span>{{ counterCash }}</span>
                                 </div>
                             </div>
                         </div>
@@ -71,13 +71,13 @@
                             <div class="col-6">
                                 <div class="row text-subtitle1">
                                     <q-icon name="qr_code_2" size="28px"/>
-                                    &nbsp<span></span>
+                                    &nbsp<span>{{ revenueQR }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row text-subtitle1">
-                                    <q-icon name="attach_money" size="28px"/>
-                                    &nbsp<span></span>
+                                    <q-icon name="paid" size="28px"/>
+                                    &nbsp<span>{{ revenueCash }}</span>
                                 </div>
                             </div>
                         </div>
@@ -378,6 +378,11 @@
     const transWasher = ref('')
     const transDryer = ref('')
 
+    const counterQR = ref('')
+    const counterCash = ref('')
+    const revenueQR = ref('')
+    const revenueCash = ref('')
+
     
     let startDate = ref('')
     const startDay = ref()
@@ -433,15 +438,16 @@
         console.log("newDate: ",yourDate)
 
         // let nowToday = yourDate.toISOString().split('T')[0]
-        let nowToday = yourDate.toLocaleString()
+        // let nowToday = yourDate.toLocaleString()
         
 
         // const nowToday = yourDate.toISOString()
-        console.log("yourDate",nowToday)
+        // console.log("yourDate",nowToday)
 
         if (!startDate.value){
             yourDate.setHours(0)
             yourDate.setMinutes(0)
+            // yourDate.toISOString()
             startDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
             // startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
             //     'sv-SE',
@@ -455,12 +461,14 @@
             //         // timeStyle:'short'
             //     }
             // )
+            
             console.log("Start Date: ",startDate.value)
         }
 
         if((!endDate.value)){
             yourDate.setHours(23)
             yourDate.setMinutes(59)
+            // const testDate = date.buildDate({ year: 2024, date: 21},true)
             endDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
             // endDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),23,59).toLocaleString(
             //     'sv-SE',
@@ -475,6 +483,7 @@
             //     }                
             // )
             console.log("End Date: ",endDate.value)
+            // console.log("test Date:", testDate)
         }
 
         //Making Branch List
@@ -499,6 +508,7 @@
         
         // Step1: getting rowsNumber
         const totalResult = await getRowsNumberCount(branchSelected.value)
+        
         console.log("totalResult: ",totalResult)
 
         pagination.value.rowsNumber = totalResult.totalCount._count
@@ -516,6 +526,13 @@
 
         // pagination.value.rowsNumber = await getRowsNumberCount(filter)
 
+        const paymentRevenue = await getPaymentRevenue(branchSelected.value)
+        console.log("paymentRevenue: ",paymentRevenue)
+        counterQR.value = paymentRevenue.qrResult._count
+        counterCash.value = paymentRevenue.cashResult._count
+
+        revenueQR.value = paymentRevenue.qrResult._sum.amount
+        revenueCash.value = paymentRevenue.cashResult._sum.amount
        
 
 
@@ -650,6 +667,19 @@
 
         console.log("Result:",rowsCount)
         return rowsCount
+    }
+
+
+    async function getPaymentRevenue(filter:any){
+        if(!filter){
+            const result = await $fetch('/api/transaction/paymentRevenue')
+            return result
+        }else{
+            const result = await $fetch('/api/transaction/paymentRevenue?filter='
+                +filter+'&startDate='+startDate.value + '&endDate='+endDate.value
+            )
+            return result
+        }
     }
 
 

@@ -20,7 +20,7 @@ export default defineEventHandler( async(event) => {
 
 
 
-    let startTime, endTime, startDate, endDate
+    let startDate, endDate
     if(body.startDate && body.endDate){
         startDate = new Date(body.startDate).toISOString()
         endDate = new Date(body.endDate).toISOString()

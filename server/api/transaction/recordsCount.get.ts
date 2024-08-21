@@ -17,7 +17,7 @@ export default defineEventHandler(async(event)=>{
     console.log("sDate::",sDate)
     console.log("eDate::",eDate)
 
-    let startTime, endTime, startDate, endDate
+    let startDate, endDate
     if(query.startDate && query.endDate){
         startDate = new Date(String(sDate))
         endDate = new Date(String(eDate))
@@ -75,6 +75,7 @@ export default defineEventHandler(async(event)=>{
             }
 
         })
+
         const dryerCount = await prisma.transactions.aggregate({
             where:{
                 createdAt:{
@@ -97,62 +98,63 @@ export default defineEventHandler(async(event)=>{
             washerCount: washerCount,
             dryerCount: dryerCount
         }
-    }
-    
-    // This for count record by branchName
-    const count = await prisma.transactions.aggregate({
-        where:{
-            createdAt:{
-                gte: startDate,
-                lt: endDate
+    }else{
+        // This for count record by branchName
+        const count = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)}
+                }
             },
-            device:{
-                branch:{branchName: String(filter)}
+            _count:true,
+            _sum:{
+                amount: true
             }
-        },
-        _count:true,
-        _sum:{
-            amount: true
-        }
-    })
+        })
 
-    const washerCount = await prisma.transactions.aggregate({
-        where:{
-            createdAt:{
-                gte: startDate,
-                lt: endDate
+        const washerCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                    type: "Washer"
+                }
             },
-            device:{
-                branch:{branchName: String(filter)},
-                type: "Washer"
+            _count:true,
+            _sum:{
+                amount: true
             }
-        },
-        _count:true,
-        _sum:{
-            amount: true
-        }
-      
-    })
-    const dryerCount = await prisma.transactions.aggregate({
-        where:{
-            createdAt:{
-                gte: startDate,
-                lt: endDate
-            },
-            device:{
-                branch:{branchName: String(filter)},
-                type: "Dryer"
-            }
-        },
-        _count:true,
-        _sum:{
-            amount: true
-        }
-    })
+        
+        })
 
-    return {
-        totalCount: count,
-        washerCount: washerCount,
-        dryerCount: dryerCount
+        const dryerCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                    type: "Dryer"
+                }
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }
+        })
+
+        return {
+            totalCount: count,
+            washerCount: washerCount,
+            dryerCount: dryerCount
+        }
     }
 })
