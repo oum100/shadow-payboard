@@ -447,6 +447,7 @@
         if (!startDate.value){
             yourDate.setHours(0)
             yourDate.setMinutes(0)
+            console.log("yourDate TZ:", yourDate.getTimezoneOffset())
             // yourDate.toISOString()
             startDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
             // startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
@@ -468,7 +469,6 @@
         if((!endDate.value)){
             yourDate.setHours(23)
             yourDate.setMinutes(59)
-            // const testDate = date.buildDate({ year: 2024, date: 21},true)
             endDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
             // endDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),23,59).toLocaleString(
             //     'sv-SE',
