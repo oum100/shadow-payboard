@@ -14,19 +14,20 @@ export default defineEventHandler(async(event)=>{
     const eDate = query.endDate
 
     // console.log("query:",query)
-    console.log("sDate::",sDate)
-    console.log("eDate::",eDate)
+    console.log("-------RecordsCount-------")
+    console.log("->sDate::",sDate)
+    console.log("->eDate::",eDate)
 
     let startDate, endDate
     if(query.startDate && query.endDate){
         startDate = new Date(String(sDate))
         endDate = new Date(String(eDate))
 
-        startDate = startDate.toISOString()
-        endDate = endDate.toISOString()
+        startDate = new Date(startDate.getTime())
+        endDate = new Date(endDate.getTime())
 
-        console.log("RecordsCount->starDate: ",startDate)
-        console.log("RecordsCount->endDate: ",endDate)
+        console.log("->starDate: ",startDate)
+        console.log("->endDate: ",endDate)
 
         // startDate = new Date(
         //     startDate.getFullYear(),

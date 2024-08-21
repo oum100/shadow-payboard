@@ -14,8 +14,9 @@ export default defineEventHandler(async(event)=>{
     const eDate = query.endDate
 
     // console.log("query:",query)
-    console.log("sDate::",sDate)
-    console.log("eDate::",eDate)
+    console.log("-------paymentRevenue-------")
+    console.log("->sDate::",sDate)
+    console.log("->eDate::",eDate)
 
     //Preparing information for filtering startdate and enddate
     let startDate, endDate
@@ -23,8 +24,11 @@ export default defineEventHandler(async(event)=>{
         startDate = new Date(String(sDate))
         endDate = new Date(String(eDate))
 
-        console.log("RecordsCount->starDate: ",startDate)
-        console.log("RecordsCount->endDate: ",endDate)
+        startDate = new Date(startDate.getTime())
+        endDate = new Date(endDate.getTime())
+
+        console.log("->starDate: ",startDate)
+        console.log("->endDate: ",endDate)
     }
 
     if(filter === "ALL"){
@@ -97,7 +101,7 @@ export default defineEventHandler(async(event)=>{
                 amount : true
             }
         })
-        
+
         if(!qrResult._sum.amount){qrResult._sum.amount=0}
         if(!cashResult._sum.amount){cashResult._sum.amount=0}
 
