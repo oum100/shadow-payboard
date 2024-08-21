@@ -435,7 +435,8 @@
 
         //Set startDate and endDate is today        
         let yourDate = new Date()
-        console.log("newDate: ",yourDate)
+        console.log("yourDate Now",yourDate)
+        console.log("utcDate: ",new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate())))
 
         // let nowToday = yourDate.toISOString().split('T')[0]
         // let nowToday = yourDate.toLocaleString()
@@ -700,9 +701,9 @@
 
     function onStartDate(value:any,reason:any,details:any){
         // startDay.value = details.day
-        console.log("onStartDate->Value:",value)
-        console.log("onStartDate->Reason:",reason)
-        console.log("onStartDate->Details:",details)
+        // console.log("onStartDate->Value:",value)
+        // console.log("onStartDate->Reason:",reason)
+        // console.log("onStartDate->Details:",details)
        
         if(startDay && endDay){
             totalDay.value = endDay.value - startDay.value
@@ -713,9 +714,9 @@
 
     function onEndDate(value:any,reason:any,details:any){
         // endDay.value = details.day
-        console.log("onEndDate->Value:",value)
-        console.log("onEndDate->Reason:",reason)
-        console.log("onEndDate->Details:",details)
+        // console.log("onEndDate->Value:",value)
+        // console.log("onEndDate->Reason:",reason)
+        // console.log("onEndDate->Details:",details)
 
         if(startDay && endDay){
             totalDay.value = endDay.value - startDay.value
