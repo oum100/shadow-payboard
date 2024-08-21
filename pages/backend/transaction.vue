@@ -435,10 +435,10 @@
 
         //Set startDate and endDate is today        
         let yourDate = new Date()
-        console.log("yourDate 1",yourDate)
+        console.log("yourDate A",yourDate)
 
-        yourDate =new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth()))
-        console.log("yourDate 2",yourDate)
+        yourDate =new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(),yourDate.getDate()))
+        console.log("yourDate B",yourDate)
         // console.log("utcDate: ",new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),
         // yourDate.getHours(),yourDate.getMinutes()
         // )))
