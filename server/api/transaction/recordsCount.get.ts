@@ -1,6 +1,6 @@
 import { PrismaClient} from "@prisma/client";
 import Debug from 'debug'
-
+import { date } from 'quasar'
 
 const prisma = new PrismaClient();
 const debug = Debug('api:transaction:getAll');
@@ -22,6 +22,9 @@ export default defineEventHandler(async(event)=>{
     if(query.startDate && query.endDate){
         startDate = new Date(String(sDate)).toISOString()
         endDate = new Date(String(eDate)).toISOString()
+
+        startDate = date.formatDate(startDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+        endDate = date.formatDate(endDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
 
         // startDate = new Date(startDate.getTime())
         // endDate = new Date(endDate.getTime())
