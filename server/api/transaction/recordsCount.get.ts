@@ -20,8 +20,8 @@ export default defineEventHandler(async(event)=>{
 
     let startDate, endDate
     if(query.startDate && query.endDate){
-        startDate = new Date(String(sDate))
-        endDate = new Date(String(eDate))
+        startDate = new Date(String(sDate)).toISOString()
+        endDate = new Date(String(eDate)).toISOString()
 
         // startDate = new Date(startDate.getTime())
         // endDate = new Date(endDate.getTime())

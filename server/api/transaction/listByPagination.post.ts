@@ -22,8 +22,8 @@ export default defineEventHandler( async(event) => {
 
     let startDate, endDate
     if(body.startDate && body.endDate){
-        startDate = new Date(body.startDate)
-        endDate = new Date(body.endDate)
+        startDate = new Date(body.startDate).toISOString()
+        endDate = new Date(body.endDate).toISOString()
 
         // startDate = new Date(startDate.getTime())
         // endDate = new Date(endDate.getTime())
