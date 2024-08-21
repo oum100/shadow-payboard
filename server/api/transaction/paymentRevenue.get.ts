@@ -24,8 +24,8 @@ export default defineEventHandler(async(event)=>{
         startDate = new Date(String(sDate))
         endDate = new Date(String(eDate))
 
-        startDate = new Date(startDate.getTime())
-        endDate = new Date(endDate.getTime())
+        // startDate = new Date(startDate.getTime())
+        // endDate = new Date(endDate.getTime())
 
         console.log("->starDate: ",startDate)
         console.log("->endDate: ",endDate)

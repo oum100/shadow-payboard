@@ -25,8 +25,8 @@ export default defineEventHandler( async(event) => {
         startDate = new Date(body.startDate)
         endDate = new Date(body.endDate)
 
-        startDate = new Date(startDate.getTime())
-        endDate = new Date(endDate.getTime())
+        // startDate = new Date(startDate.getTime())
+        // endDate = new Date(endDate.getTime())
 
         console.log("-------ListByPagination-------")
         console.log("ListByPage->start: ",startDate)
