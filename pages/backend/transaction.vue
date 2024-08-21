@@ -434,13 +434,19 @@
         console.log("Execute here")
 
         //Set startDate and endDate is today        
+
         let yourDate = new Date(Date.now())
         console.log("yourDate A",yourDate)
 
-        
+        // var now = new Date();
+        // var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+        // console.log("utc: ",utc)
 
-        yourDate =new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(),yourDate.getDate(),0,0,0))
-        console.log("utc Date",yourDate)
+        // console.log("utc-new: ",utc)
+        // yourDate = utc
+
+        // yourDate =new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(),yourDate.getDate(),yourDate.getHours(),yourDate.getMinutes()))
+        // console.log("utc Date",yourDate)
 
         // let nowToday = yourDate.toISOString().split('T')[0]
         // let nowToday = yourDate.toLocaleString()
@@ -450,9 +456,11 @@
         // console.log("yourDate",nowToday)
 
         if (!startDate.value){
-            // yourDate.setHours(0)
-            // yourDate.setMinutes(0)
-            yourDate.toISOString()
+            yourDate.setHours(0)
+            yourDate.setMinutes(0)
+            // yourDate.toISOString()
+
+            // const newDate = date.subtractFromDate(yourDate, { hours: 1 }) 
             startDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
             // startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
             //     'sv-SE',

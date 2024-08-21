@@ -22,6 +22,9 @@ export default defineEventHandler(async(event)=>{
         startDate = new Date(String(sDate))
         endDate = new Date(String(eDate))
 
+        startDate = startDate.toISOString()
+        endDate = endDate.toISOString()
+
         console.log("RecordsCount->starDate: ",startDate)
         console.log("RecordsCount->endDate: ",endDate)
 
