@@ -439,7 +439,7 @@
 
         
 
-        yourDate =new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(),yourDate.getDate(),-7,0,0))
+        yourDate =new Date(Date.UTC(yourDate.getFullYear(),yourDate.getMonth(),yourDate.getDate(),0,0,0))
         console.log("utc Date",yourDate)
 
         // let nowToday = yourDate.toISOString().split('T')[0]
