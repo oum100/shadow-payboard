@@ -453,7 +453,7 @@
         if (!startDate.value){
             yourDate.setHours(0)
             yourDate.setMinutes(0)
-            // yourDate.toISOString()
+            yourDate.toISOString()
             startDate.value = date.formatDate(yourDate,'YYYY-MM-DD HH:mm')
             // startDate.value = new Date(yourDate.getFullYear(),yourDate.getMonth(), yourDate.getDate(),0,0).toLocaleString(
             //     'sv-SE',
