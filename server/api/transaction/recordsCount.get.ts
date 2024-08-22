@@ -20,17 +20,28 @@ export default defineEventHandler(async(event)=>{
 
     let startDate, endDate
     if(query.startDate && query.endDate){
-        startDate = new Date(String(sDate)).toISOString()
-        endDate = new Date(String(eDate)).toISOString()
-
-        startDate = date.formatDate(startDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
-        endDate = date.formatDate(endDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
-
-        // startDate = new Date("2024-08-21T17:00:00.000Z")
-        // endDate = new Date("2024-08-22T16:59:00.000Z")
+        startDate = new Date(String(sDate)).getTime() //ISO Format
+        endDate = new Date(String(eDate)).getTime()
 
         console.log("->starDate: ",startDate)
         console.log("->endDate: ",endDate)
+
+        startDate = new Date(startDate)
+        endDate = new Date(endDate)
+        // startDate = new Date(Date.UTC(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0))
+        // endDate = new Date(Date.UTC(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59))
+
+        console.log("->starDate-UTC: ",startDate)
+        console.log("->endDate-UTC: ",endDate)
+
+        startDate = startDate.toISOString()
+        endDate = endDate.toISOString()
+
+        // startDate = date.formatDate(startDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+        // endDate = date.formatDate(endDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+
+        console.log("->starDate-ISO: ",startDate)
+        console.log("->endDate-ISO: ",endDate)
 
         // startDate = new Date(
         //     startDate.getFullYear(),
