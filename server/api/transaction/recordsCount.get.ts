@@ -1,7 +1,7 @@
 import { PrismaClient} from "@prisma/client";
 import Debug from 'debug'
 import { date } from 'quasar'
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 const prisma = new PrismaClient();
 const debug = Debug('api:transaction:getAll');
@@ -38,17 +38,15 @@ export default defineEventHandler(async(event)=>{
         // startDate = startDate.toISOString()
         // endDate = endDate.toISOString()
 
-        startDate = moment(String(sDate))
-        endDate = moment(String(eDate))
+        startDate = moment.tz(String(sDate),'Asia/Bangkok').toISOString()
+        endDate = moment.tz(String(eDate),'Asia/Bangkok').toISOString()
 
 
-        console.log("->starDate-UTC: ",startDate)
-        console.log("->endDate-UTC: ",endDate)
+        // console.log("->starDate-UTC: ",startDate)
+        // console.log("->endDate-UTC: ",endDate)
 
-        startDate = startDate.toISOString()
-        endDate = endDate.toISOString()
-
-
+        // startDate = startDate.toISOString()
+        // endDate = endDate.toISOString()
         console.log("->starDate->ISO: ",startDate)
         console.log("->endDate->ISO: ",endDate)
     }
