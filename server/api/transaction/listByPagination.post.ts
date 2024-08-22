@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import Debug from 'debug'
 import { sassTrue } from "sass";
 import { validatePagination} from "~/models/transaction";
+import moment from 'moment-timezone'
 
 const prisma = new PrismaClient();
 const debug = Debug('api:transaction:listByPagination');
@@ -22,23 +23,11 @@ export default defineEventHandler( async(event) => {
 
     let startDate, endDate
     if(body.startDate && body.endDate){
-        startDate = new Date(body.startDate).toISOString()
-        endDate = new Date(body.endDate).toISOString()
+        startDate = moment.tz(String(sDate),'Asia/Bangkok').toISOString()
+        endDate = moment.tz(String(eDate),'Asia/Bangkok').toISOString()
 
-        // startDate = new Date(startDate.getTime())
-        // endDate = new Date(endDate.getTime())
-
-        console.log("-------ListByPagination-------")
-        console.log("ListByPage->start: ",startDate)
-        console.log("ListByPage->end: ",endDate)
-
-        // startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
-        // endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
-        
-        // // console.log("ListByPage->start: ",startTime)
-        // // console.log("ListByPage->end: ",endTime)
-        // startTime = startTime.toISOString()
-        // endTime = endTime.toISOString()
+        console.log("->starDate->ISO: ",startDate)
+        console.log("->endDate->ISO: ",endDate)
     }
 
 

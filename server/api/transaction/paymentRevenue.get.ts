@@ -1,6 +1,6 @@
 import { PrismaClient} from "@prisma/client";
 import Debug from 'debug'
-
+import moment from 'moment-timezone'
 
 const prisma = new PrismaClient();
 const debug = Debug('api:transaction:paymentType');
@@ -21,14 +21,11 @@ export default defineEventHandler(async(event)=>{
     //Preparing information for filtering startdate and enddate
     let startDate, endDate
     if(query.startDate && query.endDate){
-        startDate = new Date(String(sDate)).toISOString()
-        endDate = new Date(String(eDate)).toISOString()
+        startDate = moment.tz(String(sDate),'Asia/Bangkok').toISOString()
+        endDate = moment.tz(String(eDate),'Asia/Bangkok').toISOString()
 
-        // startDate = new Date(startDate.getTime())
-        // endDate = new Date(endDate.getTime())
-
-        console.log("->starDate: ",startDate)
-        console.log("->endDate: ",endDate)
+        console.log("->starDate->ISO: ",startDate)
+        console.log("->endDate->ISO: ",endDate)
     }
 
     if(filter === "ALL"){

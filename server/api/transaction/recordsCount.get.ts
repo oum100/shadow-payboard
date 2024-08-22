@@ -23,30 +23,9 @@ export default defineEventHandler(async(event)=>{
 
     let startDate, endDate
     if(query.startDate && query.endDate){
-        // startDate = new Date(String(sDate)).getTime() //ISO Format
-        // endDate = new Date(String(eDate)).getTime()
-
-        // console.log("->starDate: ",startDate)
-        // console.log("->endDate: ",endDate)
-
-        // startDate = new Date(startDate) //Make it to UTC
-        // endDate = new Date(endDate)
- 
-        // console.log("->starDate-UTC: ",startDate)
-        // console.log("->endDate-UTC: ",endDate)
-
-        // startDate = startDate.toISOString()
-        // endDate = endDate.toISOString()
-
         startDate = moment.tz(String(sDate),'Asia/Bangkok').toISOString()
         endDate = moment.tz(String(eDate),'Asia/Bangkok').toISOString()
 
-
-        // console.log("->starDate-UTC: ",startDate)
-        // console.log("->endDate-UTC: ",endDate)
-
-        // startDate = startDate.toISOString()
-        // endDate = endDate.toISOString()
         console.log("->starDate->ISO: ",startDate)
         console.log("->endDate->ISO: ",endDate)
     }
