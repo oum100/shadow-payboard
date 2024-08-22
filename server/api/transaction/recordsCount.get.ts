@@ -1,6 +1,7 @@
 import { PrismaClient} from "@prisma/client";
 import Debug from 'debug'
 import { date } from 'quasar'
+import moment from 'moment';
 
 const prisma = new PrismaClient();
 const debug = Debug('api:transaction:getAll');
@@ -18,18 +19,28 @@ export default defineEventHandler(async(event)=>{
     console.log("->sDate::",sDate)
     console.log("->eDate::",eDate)
 
+    
+
     let startDate, endDate
     if(query.startDate && query.endDate){
-        startDate = new Date(String(sDate)).getTime() //ISO Format
-        endDate = new Date(String(eDate)).getTime()
+        // startDate = new Date(String(sDate)).getTime() //ISO Format
+        // endDate = new Date(String(eDate)).getTime()
 
-        console.log("->starDate: ",startDate)
-        console.log("->endDate: ",endDate)
+        // console.log("->starDate: ",startDate)
+        // console.log("->endDate: ",endDate)
 
-        startDate = new Date(startDate)
-        endDate = new Date(endDate)
-        // startDate = new Date(Date.UTC(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0))
-        // endDate = new Date(Date.UTC(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59))
+        // startDate = new Date(startDate) //Make it to UTC
+        // endDate = new Date(endDate)
+ 
+        // console.log("->starDate-UTC: ",startDate)
+        // console.log("->endDate-UTC: ",endDate)
+
+        // startDate = startDate.toISOString()
+        // endDate = endDate.toISOString()
+
+        startDate = moment(String(sDate))
+        endDate = moment(String(eDate))
+
 
         console.log("->starDate-UTC: ",startDate)
         console.log("->endDate-UTC: ",endDate)
@@ -37,31 +48,9 @@ export default defineEventHandler(async(event)=>{
         startDate = startDate.toISOString()
         endDate = endDate.toISOString()
 
-        // startDate = date.formatDate(startDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
-        // endDate = date.formatDate(endDate, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
 
-        console.log("->starDate-ISO: ",startDate)
-        console.log("->endDate-ISO: ",endDate)
-
-        // startDate = new Date(
-        //     startDate.getFullYear(),
-        //     startDate.getMonth(),
-        //     startDate.getDate(),
-        //     startDate.getHours(),
-        //     startDate.getMinutes(),
-        // )
-
-        // console.log("RecordsCount->starDate->2: ",startDate)
-        // console.log("RecordsCount->endDate->2: ",endDate)
-
-        // startTime = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate(),0,0,0)
-        // endTime = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
-
-        // startTime = startTime.toISOString()
-        // endTime = endTime.toISOString()
-        
-        // console.log("RecordsCount->starTimet: ",startTime)
-        // console.log("RecordsCount->endTime: ",endTime)
+        console.log("->starDate->ISO: ",startDate)
+        console.log("->endDate->ISO: ",endDate)
     }
 
     if(filter === "ALL"){
