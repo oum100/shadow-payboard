@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-md">
-        <div class="row justify-around">
-            <div class="q-pa-md col-xs-12 col-sm-6 col-md-6">
+        <div class="row">
+            <div class="q-pa-md col-xs-12 col-sm-4 col-md-3">
                 <q-card style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         <div class = "row">
@@ -46,7 +46,7 @@
                     </q-card-section>
                 </q-card>
             </div>
-            <div class="q-pa-md col-xs-12 col-sm-6 col-md-6">
+            <div class="q-pa-md col-xs-12 col-sm-4 col-md-3">
                 <q-card style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         <div class = "row">
@@ -92,7 +92,7 @@
                     </q-card-section>
                 </q-card>
             </div>
-            <!-- <div class="col-3 q-px-md">
+            <!-- <div class="q-pa-md col-xs-12 col-sm-12 col-md-4">
                 <q-card style="background: radial-gradient(circle, #3588ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         
@@ -113,7 +113,7 @@
                     </q-card-section>
                 </q-card>
             </div> -->
-            <!-- <div class="col-3 q-px-md">
+            <!-- <div class="q-pa-md col-xs-12 col-sm-12 col-md-4">
                 <q-card style="background: radial-gradient(circle, #3588ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         
@@ -136,7 +136,8 @@
             </div> -->
         </div>
         <!-- @ts-expect-error -->
-        <q-table
+        <q-responsive :ratio="16/9">
+            <q-table
             class="my-sticky-dynamic"
             flat bordered
             ref="tableRef"
@@ -174,7 +175,7 @@
             <template #top>
                 <div class ="col-3 text-h4 text-blue">{{ branchSelected }} transactions  </div>
                 <q-space/>
-                <div class="q-mx-md q-guttar-md" style="max-width: 230px">
+                <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:210px">
                     <q-select filled dense 
                         v-model="branchSelected" 
                         :options="listBranchOption" 
@@ -298,63 +299,65 @@
                     </q-input>
                 </div> -->
                 
-            </template>
+                </template>
 
-            <!-- Customized field "Branch" -->
-            <template #body-cell-branch="props" >
-                <q-td :props = "props" >
-                    {{ props.row.device.branch.branchName }}
-                </q-td>
-            </template>
+                <!-- Customized field "Branch" -->
+                <template #body-cell-branch="props" >
+                    <q-td :props = "props" >
+                        {{ props.row.device.branch.branchName }}
+                    </q-td>
+                </template>
 
-            <!-- Customized field "Asset" -->
-            <template #body-cell-asset="props" >
-                <q-td :props = "props" >
-                    {{ props.row.device.deviceName }}
-                </q-td>
-            </template>
+                <!-- Customized field "Asset" -->
+                <template #body-cell-asset="props" >
+                    <q-td :props = "props" >
+                        {{ props.row.device.deviceName }}
+                    </q-td>
+                </template>
 
-            <!-- <template #body-cell-date="props">
-                <q-td :props="props" auto-width class="text-center">
-                </q-td>
-            </template> -->
+                <!-- <template #body-cell-date="props">
+                    <q-td :props="props" auto-width class="text-center">
+                    </q-td>
+                </template> -->
 
-            <!-- Customized field "Machine" -->
-            <template #body-cell-type="props" >
-                <q-td :props = "props" >
-                    {{ props.row.device.type}}
-                </q-td>
-            </template>
+                <!-- Customized field "Machine" -->
+                <template #body-cell-type="props" >
+                    <q-td :props = "props" >
+                        {{ props.row.device.type}}
+                    </q-td>
+                </template>
 
-            <template #body-cell-paymentBy="props">
-                <q-td :props="props" auto-width>
-                    <div class="text-start">
-                        <q-icon name="qr_code_2" v-if="props.row.paymentBy == 'qrcode'" size="2em"/>
-                        <q-icon name="monetization_on" v-else-if="props.row.paymentBy == 'cash'" size="2em"/>
-                        <q-icon name="undo" v-else-if="props.row.paymentBy == 'refund'" size="2em"/>
-                        <q-icon name="minimize" size="2em" v-else />
-                    </div>
-                </q-td>
-            </template>
+                <template #body-cell-paymentBy="props">
+                    <q-td :props="props" auto-width>
+                        <div class="text-start">
+                            <q-icon name="qr_code_2" v-if="props.row.paymentBy == 'qrcode'" size="2em"/>
+                            <q-icon name="monetization_on" v-else-if="props.row.paymentBy == 'cash'" size="2em"/>
+                            <q-icon name="undo" v-else-if="props.row.paymentBy == 'refund'" size="2em"/>
+                            <q-icon name="minimize" size="2em" v-else />
+                        </div>
+                    </q-td>
+                </template>
 
-            <template #body-cell-status="props">
-                <q-td :props="props" auto-width class="text-center">
-                    <q-badge v-if="props.row.status === 'paid'" color="green-9" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
-                    <q-badge v-else-if="props.row.status === 'refund'" color="red" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
-                    <q-badge v-else-if="props.row.status == 'cancel'" color="grey-6" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
-                    <q-badge v-else-if="props.row.status == 'admin'" color="blue" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
-                </q-td>
-            </template>
+                <template #body-cell-status="props">
+                    <q-td :props="props" auto-width class="text-center">
+                        <q-badge v-if="props.row.status === 'paid'" color="green-9" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
+                        <q-badge v-else-if="props.row.status === 'refund'" color="red" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
+                        <q-badge v-else-if="props.row.status == 'cancel'" color="grey-6" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
+                        <q-badge v-else-if="props.row.status == 'admin'" color="blue" class="text-white text-capitalize">{{ props.row.status }}</q-badge>
+                    </q-td>
+                </template>
 
-            <template #body-cell-actions="props">
-                <q-td class="text-center">
-                    <q-btn flat square size="md" icon="currency_exchange" color="blue" title="Refund" />
-                    <q-btn flat square size="md" icon="cancel_presentation" color="red" title="Cancel"> </q-btn>
-                </q-td>
-            </template>
+                <template #body-cell-actions="props">
+                    <q-td class="text-center">
+                        <q-btn flat square size="md" icon="currency_exchange" color="blue" title="Refund" />
+                        <q-btn flat square size="md" icon="cancel_presentation" color="red" title="Cancel"> </q-btn>
+                    </q-td>
+                </template>
 
            
-        </q-table>
+            </q-table>
+        </q-responsive>
+
         <div class="q-mt-md">
             Selected: {{ JSON.stringify(selected) }}
         </div>
@@ -546,7 +549,7 @@
 
         // pagination.value.rowsNumber = await getRowsNumberCount(filter)
 
-        const paymentRevenue = await getPaymentRevenue(branchSelected.value)
+        const paymentRevenue:any = await getPaymentRevenue(branchSelected.value)
         console.log("paymentRevenue: ",paymentRevenue)
         counterQR.value = paymentRevenue.qrResult._count
         counterCash.value = paymentRevenue.cashResult._count
