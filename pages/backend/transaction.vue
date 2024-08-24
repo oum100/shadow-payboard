@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-md">
-        <div class="row " style="height: 130px">
-            <div class="col-3 q-px-md">
+        <div class="row justify-around">
+            <div class="q-pa-md col-xs-12 col-sm-6 col-md-6">
                 <q-card style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         <div class = "row">
@@ -14,35 +14,39 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>Washer</q-tooltip>
                                     <q-icon name="local_laundry_service" size="28px"/>
-                                    Washer:&nbsp<span>{{ transWasher }}</span>
+                                    <span>&nbsp{{ transWasher }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>Dryer</q-tooltip>
                                     <q-icon name="dry_cleaning" size="28px"/>
-                                    Dryer:&nbsp<span>{{ transDryer }}</span>
+                                    <span>&nbsp{{ transDryer }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>Pay By QR</q-tooltip>
                                     <q-icon name="qr_code_2" size="28px"/>
-                                    QR:&nbsp<span>{{ counterQR }}</span>
+                                    <span>&nbsp{{ counterQR }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>Pay By Cash</q-tooltip>
                                     <q-icon name="paid" size="28px"/>
-                                    Cash:&nbsp<span>{{ counterCash }}</span>
+                                    <span>&nbsp{{ counterCash }}</span>
                                 </div>
                             </div>
                         </div>
                     </q-card-section>
                 </q-card>
             </div>
-            <div class="col-3 q-px-md ">
+            <div class="q-pa-md col-xs-12 col-sm-6 col-md-6">
                 <q-card style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         <div class = "row">
@@ -56,28 +60,32 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>Washer</q-tooltip>
                                     <q-icon name="local_laundry_service" size="28px"/>
-                                    &nbsp<span>{{ revenueWasher }}</span>
+                                    <span>&nbsp{{ revenueWasher }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>Dryer</q-tooltip>
                                     <q-icon name="dry_cleaning" size="28px"/>
-                                    &nbsp<span>{{ revenueDryer }}</span>
+                                    <span>&nbsp{{ revenueDryer }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>By QrCode</q-tooltip>
                                     <q-icon name="qr_code_2" size="28px"/>
-                                    &nbsp<span>{{ revenueQR }}</span>
+                                    <span>&nbsp{{ revenueQR }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row text-subtitle1">
+                                    <q-tooltip>By Cash</q-tooltip>
                                     <q-icon name="paid" size="28px"/>
-                                    &nbsp<span>{{ revenueCash }}</span>
+                                    <span>&nbsp{{ revenueCash }}</span>
                                 </div>
                             </div>
                         </div>
