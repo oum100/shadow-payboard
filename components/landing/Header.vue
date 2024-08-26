@@ -48,6 +48,7 @@
                         </q-list>
                     </q-menu>
                 </q-btn>
+                <q-btn to="/backend/dashboard" flat>Dashboard</q-btn>
                 <q-btn to="/backend/asset" flat>Asset</q-btn>
                 <q-btn to="/backend/transaction" flat>Transaction</q-btn>
                 <q-btn to="/backend/test" flat>Test</q-btn>
