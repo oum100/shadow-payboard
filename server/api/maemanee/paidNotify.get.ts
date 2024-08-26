@@ -7,6 +7,6 @@ const debug = Debug('api:cyberpay:painNotify');
 export default defineEventHandler(async(event)=>{
     const query = getQuery(event)
 
-
+    console.log(query)
     return query
 })
