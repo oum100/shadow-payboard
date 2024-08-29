@@ -55,10 +55,13 @@ enum MachineType {
   WASHER
   DRYER
   WATER
-  FUEL
+  VENDING
+  CHARGER
   TOY
-  UNDEFINED
-  NULL
+  FUEL
+  CARWASH
+  COFFEE
+  SOFTENER
 }
 
 model Branchs{

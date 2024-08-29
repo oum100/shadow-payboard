@@ -30,8 +30,10 @@ export default defineEventHandler(async(event)=>{
         console.log("->endDate->ISO: ",endDate)
     }
 
+    
+
     if(filter === "ALL"){
-        const count = await prisma.transactions.aggregate({
+        const totalCount = await prisma.transactions.aggregate({
             where:{ 
                 createdAt:{
                     gte: startDate,
@@ -43,6 +45,34 @@ export default defineEventHandler(async(event)=>{
                 amount : true
             }
         })
+
+        const totalCountQR = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                paymentBy:"qrcode"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }     
+        })
+        const totalCountCash = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                paymentBy:"cash"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }     
+        })
+
         const washerCount = await prisma.transactions.aggregate({
             where:{
                 createdAt:{
@@ -76,28 +106,140 @@ export default defineEventHandler(async(event)=>{
             }
         })
 
-
-        return {
-            totalCount: count,
-            washerCount: washerCount,
-            dryerCount: dryerCount
-        }
-    }else{
-        // This for count record by branchName
-        const count = await prisma.transactions.aggregate({
+        const washerQRCount = await prisma.transactions.aggregate({
             where:{
                 createdAt:{
                     gte: startDate,
                     lt: endDate
                 },
                 device:{
-                    branch:{branchName: String(filter)}
-                }
+                    type: "Washer"
+                },
+                paymentBy:"qrcode"
             },
             _count:true,
             _sum:{
                 amount: true
+            }       
+        })
+
+        const washerCashCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    type: "Washer"
+                },
+                paymentBy:"cash"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }       
+        })
+
+        const dryerQRCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    type: "Dryer"
+                },
+                paymentBy:"qrcode"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }       
+        })
+
+        const DryerCashCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    type: "Dryer"
+                },
+                paymentBy:"cash"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }       
+        })        
+
+        return {
+            totalCount: {
+                countAll: totalCount,
+                countQR: totalCountQR,
+                countCash: totalCountCash,
+            },
+            washer:{
+                countAll: washerCount,
+                countQR: washerQRCount,
+                countCash: washerCashCount
+            },    
+            dryer:{
+                countAll: dryerCount,
+                countQR:  dryerQRCount,
+                countCash: DryerCashCount
+            }    
+        }
+    }else{
+        // This for count record by branchName
+        const totalCount = await prisma.transactions.aggregate({
+            where:{ 
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                },
+            },
+            _count: true,
+            _sum:{
+                amount : true
             }
+        })
+
+        const totalCountQR = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                },
+                paymentBy:"qrcode"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }     
+        })
+        const totalCountCash = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                },
+                paymentBy:"cash"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }     
         })
 
         const washerCount = await prisma.transactions.aggregate({
@@ -135,10 +277,94 @@ export default defineEventHandler(async(event)=>{
             }
         })
 
+        const washerQRCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                    type: "Washer"
+                },
+                paymentBy:"qrcode"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }       
+        })
+
+        const washerCashCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                    type: "Washer"
+                },
+                paymentBy:"cash"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }       
+        })
+
+        const dryerQRCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                    type: "Dryer"
+                },
+                paymentBy:"qrcode"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }       
+        })
+
+        const DryerCashCount = await prisma.transactions.aggregate({
+            where:{
+                createdAt:{
+                    gte: startDate,
+                    lt: endDate
+                },
+                device:{
+                    branch:{branchName: String(filter)},
+                    type: "Dryer"
+                },
+                paymentBy:"cash"
+            },
+            _count:true,
+            _sum:{
+                amount: true
+            }       
+        })        
+
         return {
-            totalCount: count,
-            washerCount: washerCount,
-            dryerCount: dryerCount
+            totalCount: {
+                countAll: totalCount,
+                countQR: totalCountQR,
+                countCash: totalCountCash,
+            },
+            washer:{
+                countAll: washerCount,
+                countQR: washerQRCount,
+                countCash: washerCashCount
+            },    
+            dryer:{
+                countAll: dryerCount,
+                countQR:  dryerQRCount,
+                countCash: DryerCashCount
+            }    
         }
     }
 })

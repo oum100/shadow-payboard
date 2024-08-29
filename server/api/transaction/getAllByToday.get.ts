@@ -3,8 +3,8 @@ import Debug from 'debug'
 
 
 const prisma = new PrismaClient();
-
 const debug = Debug('api:transaction:getAll');
+
 var days = 0; // Days you want to subtract   
 // var days = 0.291666666666667
 const tNow = new Date();

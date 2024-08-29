@@ -9,9 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
-
   "typings": "./typings/vue-apexcharts.d.ts",
-
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxtjs/google-fonts": "^3.1.3",

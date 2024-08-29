@@ -32,25 +32,25 @@
             </q-card>
         </div>    
     </div> -->
-    <div class = "row q-my-sm justify-center">
+    <!-- <div class = "row q-my-sm justify-center">
       <div class="col-md-10">
         <q-card>
           <q-card-section>
             <ClientOnly>
-              <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
+              <RevenueDaily/>
             </ClientOnly>
           </q-card-section>
         </q-card>
-        <apexchart type="radar" height="350" :options="chartOptions" :series="series"></apexchart>
       </div>
-    </div>    
+    </div>     -->
+    <RevenueDaily/>
 
-    <div class = "row q-my-sm justify-center">
+    <!-- <div class = "row q-my-sm justify-center">
       <div class="col-md-4">
         <q-card>
           <q-card-section>
             <ClientOnly>
-              <apexchart type="radar" height="350" :options="chartOptions1" :series="series1"></apexchart>
+              <apexchart type="area" height="350" :options="chartOptions1" :series="series1"></apexchart>
             </ClientOnly>
           </q-card-section>
         </q-card>
@@ -58,13 +58,11 @@
       <div class="col-md-4">
         <q-card>
           <q-card-section>
-            <ClientOnly>
-              <apexchart type="radar" height="350" :options="chartOptions2" :series="series2"></apexchart>
-            </ClientOnly>
+            <BarChart/>
           </q-card-section>
         </q-card>
       </div>
-    </div>      
+    </div>       -->
 
         
 
@@ -72,6 +70,7 @@
 </template>
 
 <script setup lang="ts">
+    
     var chart1 = {
         series: [76, 67, 61, 90],
         chart: {
@@ -254,7 +253,7 @@
               shared: true,
               intersect: false,
               y: {
-                formatter: function (y) {
+                formatter: function (y:any) {
                   if (typeof y !== "undefined") {
                     return y.toFixed(0) + " points";
                   }
@@ -319,6 +318,10 @@
             chart: {
               height: 350,
               type: 'radar',
+            },
+            stroke: {
+              width: 2,
+              // colors: ['#fff']
             },
             title: {
               text: 'Day in week'

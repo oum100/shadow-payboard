@@ -1,0 +1,597 @@
+<template>
+    <div class="row q-mt-sm items-start" style="height:350px;">
+        <div class="column col-3">
+            <div class="col q-px-md">
+                <q-card class="text-white"
+                    style="background: radial-gradient(circle, #787777 20%,#403e3f 80%); height:150px">
+                    <q-card-section>
+                        <div class="row q-pa-sm">
+                            <div class="col-6 q-px-md">
+                                <div class="text-center"><q-icon name="account_balance" size="40px"></q-icon></div>
+                                <div class="text-subtitle1 text-center">Revenue</div>
+                                <div class="text-h4 text-center">{{ revenueTotal }}</div>
+                            </div>
+
+                            <div class="column col-6" style="border:1px dashed">
+                                <div class="row items-center" style="height: 50px;">
+                                    <q-tooltip>QR Revenue</q-tooltip>
+                                    <div class="col-6 column items-center">
+                                        <q-icon name="qr_code_2" size="md"></q-icon>
+                                    </div>
+                                    <div class="col-6 column items-center">
+                                        <div class="text-h6">{{ revenueQR }}</div>
+                                    </div>
+                                </div>
+                                <q-separator color="white" size="2px" inset />
+                                <div class="row items-center" style="height: 50px;">
+                                    <q-tooltip>Cash Revenue</q-tooltip>
+                                    <div class="col-6 column items-center">
+                                        <q-icon name="paid" size="md"></q-icon>
+                                    </div>
+                                    <div class="col-6 column items-center">
+                                        <div class="text-h6">{{ revenueCash }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="col q-mt-xl q-px-md">
+                <q-card class="text-white"
+                    style="background: radial-gradient(circle, #35a2ff 20%, #014a88 100%); height:150px">
+                    <q-card-section>
+                        <div class="row q-pa-sm">
+                            <div class="col-6 q-px-md">
+                                <div class="text-center"><q-icon name="receipt_long" size="40px"></q-icon></div>
+                                <div class="text-subtitle1 text-center">Transactions</div>
+                                <div class="text-h4 text-center">{{ transTotal }}</div>
+                            </div>
+
+                            <div class="column col-6" style="border:1px dashed">
+                                <div class="row items-center" style="height: 50px;">
+                                    <q-tooltip>QR Transaction</q-tooltip>
+                                    <div class="col-6 column items-center">
+                                        <q-icon name="qr_code_2" size="md"></q-icon>
+                                    </div>
+                                    <div class="col-6 column items-center">
+                                        <div class="text-h6">{{ counterQR }}</div>
+                                    </div>
+                                </div>
+                                <q-separator color="white" size="2px" inset />
+                                <div class="row items-center" style="height: 50px;">
+                                    <q-tooltip>Cash Transaction</q-tooltip>
+                                    <div class="col-6 column items-center">
+                                        <q-icon name="paid" size="md"></q-icon>
+                                    </div>
+                                    <div class="col-6 column items-center">
+                                        <div class="text-h6">{{ counterCash }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="q-px-md">
+                <q-card style="height:350px">
+                    <q-card-section class="q-py-sm">
+                        <div class="text-h6">Daily revenue by machine</div>
+                        <ClientOnly>
+                            <apexchart type="bar" height="300" :options="chartOptionsByType" :series=seriesRevenue>
+                            </apexchart>
+                        </ClientOnly>
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
+
+        <div class="column col-3 items-center" style="height:350px;">
+            <div class="q-mb-md">
+                <div class="column col-12 col-md-4 q-pr-sm items-end">
+                    <q-btn-toggle v-model="toggleSW" color="blue-6" text-color="white" toggle-color="blue-8"
+                        toggle-text-color="white" rounded unelevated glossy :options="[
+                                    { label: 'Daily', value: 'daily' },
+                                    { label: 'Weekly', value: 'weekly' },
+                                    { label: 'Monthly', value: 'monthly' },
+                                    { label: 'Yearly', value: 'yearly' }
+                                ]" />
+                </div>
+            </div>
+
+            <div class="q-guttar-md">
+                <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
+                    style="width:250px" @update:model-value="onStartDate" />
+
+                <div v-if="toggleSW == 'daily'" class="q-mt-md q-gutter-md">
+                    <div class="q-mb-md" style="max-width: 250px; width:100%">
+                        <q-input filled dense v-model="startDate" label="Start Date">
+                            <template v-slot:prepend>
+                                <q-icon name="event" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="startDate" mask="YYYY-MM-DD HH:mm" format24h
+                                            @update:model-value="onStartDate">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-date>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+
+                            <template v-slot:append>
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="startDate" mask="YYYY-MM-DD HH:mm" format24h
+                                            @update:model-value="onStartDate">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
+                    </div>
+
+                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:100%">
+                        <q-input filled dense v-model="endDate" label="End Date">
+                            <template v-slot:prepend>
+                                <q-icon name="event" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
+                                            @update:model-value="onStartDate">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-date>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+
+                            <template v-slot:append>
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
+                                            @update:model-value="onStartDate">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
+                    </div>
+                </div>
+
+                <div v-if="toggleSW == 'weekly'" class="q-mt-md q-gutter-md">
+                    {{ toggleSW }}
+                </div>
+
+                <div v-if="toggleSW == 'monthly'" class="q-mt-md q-gutter-md">
+                    <div class="q-mb-md" style="max-width: 250px; width:100%">
+                        <q-input filled dense v-model="selectedMonth" label="Start Month">
+                            <template v-slot:prepend>
+                                <q-icon name="event" class="cursor-pointer">
+                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="selectedMonth" mask="MMMM" format24h
+                                            @update:model-value="onUpdateMonth" default-view="Months">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-date>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
+                        {{ selectedMonth }}
+                    </div>
+                </div>
+
+                <div v-if="toggleSW == 'yearly'" class="q-mt-md q-gutter-md">
+                    {{ toggleSW }}
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+    <div class="row q-ma-md justify-center items-center">
+        <div class="col-md-10">
+            <q-card>
+                <q-card-section>
+                    <ClientOnly>
+                        <apexchart type="area" height="350" :options="chartOptions" :series=series></apexchart>
+                    </ClientOnly>
+                </q-card-section>
+            </q-card>
+        </div>
+    </div>
+</template>
+
+
+
+
+
+<script setup lang="ts">
+import { date } from 'quasar'
+
+let toggleSW = ref('daily')
+const selectedWeek = ref()
+const selectedMonth = ref('Aug')
+const selectedYear = ref('2024')
+const startDate = ref()
+const startDay = ref()
+const endDate = ref()
+const endDay = ref()
+const totalDay = ref()
+let branchSelected = ref('ALL')
+let listBranchOption = ref(['ALL'])
+let series = ref()
+let seriesRevenue = ref()
+var aax:any = null
+
+const revenueTotal = ref('');
+const revenueWasher = ref('')
+const revenueDryer = ref('')
+const transTotal = ref('')
+const transWasher = ref('')
+const transDryer = ref('')
+
+const counterQR = ref('')
+const counterCash = ref('')
+const revenueQR = ref('')
+const revenueCash = ref('')
+
+const revenueMachine = Array(9).fill(0);
+const revenueMachineQR = Array(9).fill(0);
+const revenueMachineCash = Array(9).fill(0);
+
+
+const weekOptions = ref([
+    'Week1', 'Week2', 'Week3', 'Week4', 'Week5'
+])
+
+const monthOptions = ref([
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC'
+])
+
+// Initial StartDate and EndDate
+let yourDate = new Date(Date.now())
+console.log("yourDate A", yourDate)
+
+if (!startDate.value) {
+    yourDate.setHours(0)
+    yourDate.setMinutes(0)
+    startDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
+    console.log("Start Date: ", startDate.value)
+}
+
+if ((!endDate.value)) {
+    yourDate.setHours(23)
+    yourDate.setMinutes(59)
+    endDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
+    console.log("End Date: ", endDate.value)
+}
+
+const optionList = await $fetch('/api/transaction/listBranchOption')
+    console.log(optionList)
+
+    listBranchOption = ref(['ALL'])
+    optionList.forEach((item: any) => {
+        listBranchOption.value.push(item.branchName)
+    })
+
+//-----------------------------------------
+const chartOptionsByType = ref({
+    chart: {
+        type: 'bar',
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            endingShape: 'rounded'
+        },
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+    },
+    xaxis: {
+        categories: ['Washer', 'Dryer', 'Water', 'Vending', 'Charger', 'Toy', 'GAS', 'CarWash', 'Coffee'],
+    },
+    yaxis: {
+        title: {
+            text: 'Baht'
+        }
+    },
+    fill: {
+        opacity: 1
+    },
+    tooltip: {
+        //   y: {
+        //     formatter: function (val) {
+        //       return "$ " + val + " thousands"
+        //     }
+        //   }
+    }
+})
+
+const chartOptions = ref({
+    chart: {
+        id: 'Revenuedaily',
+        height: 350,
+        type: 'area',
+        toolbar: {
+            show: false,
+        },
+    },
+    dataLabels: {
+        enabled: false, // Disable data labels
+    },
+    stroke: {
+        width: 2,
+        // colors: ['#fff']
+    },
+    legend: {
+        show: true,
+        position: 'top',
+        horizontalAlign: 'left'
+    },
+    title: {
+        text: 'Daily Revenue'
+    },
+    yaxis: {
+        stepSize: 50,
+        title: {
+            text: 'Amount (Baht)',
+        },
+    },
+    xaxis: {
+        categories: Array.from({ length: 24 }, (_, i) => `${i}:00`), // Labels for each hour of the day
+        title: {
+            text: 'Hours',
+        },
+    },
+    colors: ['#8d9190', '#ff038d', '#039dfc','#018a08','#fc7f03'], //
+    markers: {
+        size: [4, 4, 4]
+    },
+    fill: {
+        type: 'gradient',
+        gradient: {
+            shade: 'light',
+            type: 'vertical',
+            shadeIntensity: 0.5,
+            gradientToColors: undefined, // Optional: Customize gradient
+            inverseColors: true,
+            opacityFrom: 0.8,
+            opacityTo: 0,
+            stops: [0, 90, 100],
+        },
+    },
+
+})
+
+
+onMounted(() => {
+    
+})
+
+    const totalResult = await getRowsNumberCount(branchSelected.value)
+    console.log("totalResult: ", totalResult)
+
+    transTotal.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._count)
+    transWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._count)
+    transDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryer.countAll._count)
+
+    // revenue.value = totalResult.totalCount._sum.amount
+    revenueTotal.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._sum.amount)
+
+    revenueWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._sum.amount)
+    revenueDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryer.countAll._sum.amount)
+
+    counterQR.value = totalResult.totalCount.countQR._count
+    counterCash.value = totalResult.totalCount.countCash._count
+
+    revenueQR.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countQR._sum.amount)
+    revenueCash.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countCash._sum.amount)
+
+    revenueMachine[0] = totalResult.washer.countAll._sum.amount
+    revenueMachineQR[0] =  totalResult.washer.countQR._sum.amount
+    revenueMachineCash[0] = totalResult.washer.countCash._sum.amount
+
+    revenueMachine[1] = totalResult.dryer.countAll._sum.amount
+    revenueMachineQR[1] = totalResult.dryer.countQR._sum.amount
+    revenueMachineCash[1] = totalResult.dryer.countCash._sum.amount
+
+    seriesRevenue.value = [
+        {
+            name: 'Total',
+            data: revenueMachine
+        },
+        {
+            name: 'QR',
+            data: revenueMachineQR
+        },
+        {
+            name: 'Cash',
+            data: revenueMachineCash
+        }
+    ]
+
+    console.log("seriesRevenue", seriesRevenue.value)
+
+    //Call api direct
+    const result:any = await $fetch('/api/transaction/groupByHour?filter='
+        + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
+
+    console.log("series data1", result.data)
+    series.value = result.data
+  
+
+async function getRevenue(branchSelected:string) {
+    const totalResult = await getRowsNumberCount(branchSelected)
+    console.log("totalResult: ", totalResult)
+
+    transTotal.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._count)
+    transWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._count)
+    transDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryer.countAll._count)
+
+    // revenue.value = totalResult.totalCount._sum.amount
+    revenueTotal.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._sum.amount)
+
+    revenueWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._sum.amount)
+    revenueDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryer.countAll._sum.amount)
+
+    counterQR.value = totalResult.totalCount.countQR._count
+    counterCash.value = totalResult.totalCount.countCash._count
+
+    revenueQR.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countQR._sum.amount)
+    revenueCash.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countCash._sum.amount)
+
+    revenueMachine[0] = totalResult.washer.countAll._sum.amount
+    revenueMachineQR[0] =  totalResult.washer.countQR._sum.amount
+    revenueMachineCash[0] = totalResult.washer.countCash._sum.amount
+
+    revenueMachine[1] = totalResult.dryer.countAll._sum.amount
+    revenueMachineQR[1] = totalResult.dryer.countQR._sum.amount
+    revenueMachineCash[1] = totalResult.dryer.countCash._sum.amount
+
+
+    // revenueMachine[0] = 5000
+    // revenueMachineQR[0] = 3000
+    // revenueMachineCash[0] = 20
+
+    // revenueMachine[1] = 200
+    // revenueMachineQR[1] = 4000
+    // revenueMachineCash[1] = 20
+
+    seriesRevenue.value = [
+        {
+            name: 'Total',
+            data: revenueMachine
+        },
+        {
+            name: 'QR',
+            data: revenueMachineQR
+        },
+        {
+            name: 'Cash',
+            data: revenueMachineCash
+        }
+    ]
+
+    console.log("seriesRevenue", seriesRevenue.value)
+
+    // //Call api direct
+    // const result:any = await $fetch('/api/transaction/groupByHour?filter='
+    //     + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
+
+    // console.log("series data1", result.data)
+    // series.value = result.data
+}
+
+
+async function fetchData(filter: string, startDate: string, endDate: string) {
+  try {
+    // Use template literals for better readability
+    const result:any = await $fetch(`/api/transaction/groupByHour?filter=${filter}&startDate=${startDate}&endDate=${endDate}`);
+    console.log("FetchData", result);
+    return result;
+  } catch (error) {
+    // Handle any errors that might occur during the fetch
+    console.error('Error fetching data:', error);
+    throw error; // Re-throw error to handle it outside this function if needed
+  }
+}
+
+
+async function onStartDate(value: any, reason: any, details: any) {
+    if (startDay && endDay) {
+        totalDay.value = endDay.value - startDay.value
+        // tableRef.value.requestServerInteraction()
+        console.log("onStartDate->TotalDay: ", totalDay)
+    }
+  
+    getRevenue(branchSelected.value)
+    const result:any = await $fetch('/api/transaction/groupByHour?filter='
+        + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
+
+    console.log("series data1", result.data)
+    series.value = result.data
+}
+
+async function onEndDate(value: any, reason: any, details: any) {
+    if (startDay && endDay) {
+        totalDay.value = endDay.value - startDay.value
+        // tableRef.value.requestServerInteraction()
+        console.log("onEndDate->TotalDay: ", totalDay)
+    }
+    getRevenue(branchSelected.value)
+    const result:any = await $fetch('/api/transaction/groupByHour?filter='
+        + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
+
+    console.log("series data1", result.data)
+    series.value = result.data
+}
+
+
+function onUpdateMonth(value: any, reason: any, details: any) {
+    console.log("Month", value)
+}
+
+async function showTrans() {
+    console.log("branchName: ", branchSelected.value)
+
+    // tableRef.value.requestServerInteraction()
+}
+
+
+
+async function getRowsNumberCount(filter: any): Promise<any> {
+    console.log("Filter Value: ", filter)
+
+    if (!filter) {
+        console.log("Filter without parameter: ")
+        const rowsCount:any = await $fetch('/api/transaction/recordsCount')
+        console.log("Result:", rowsCount)
+        return rowsCount
+    }
+
+    const rowsCount:any = await $fetch('/api/transaction/recordsCount?filter='
+        + filter + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
+
+    console.log("rowCounts Result:", rowsCount)
+    return rowsCount
+}
+
+
+
+</script>
