@@ -15,9 +15,9 @@ export default defineEventHandler(async(event)=>{
     const eDate = query.endDate
 
     // console.log("query:",query)
-    console.log("-------RecordsCount-------")
-    console.log("->sDate::",sDate)
-    console.log("->eDate::",eDate)
+    // console.log("-------RecordsCount-------")
+    // console.log("->sDate::",sDate)
+    // console.log("->eDate::",eDate)
 
     
     let startDate, endDate
@@ -25,8 +25,8 @@ export default defineEventHandler(async(event)=>{
         startDate = moment.tz(String(sDate),'Asia/Bangkok').toISOString()
         endDate = moment.tz(String(eDate),'Asia/Bangkok').toISOString()
 
-        console.log("->starDate->ISO: ",startDate)
-        console.log("->endDate->ISO: ",endDate)
+        // console.log("->starDate->ISO: ",startDate)
+        // console.log("->endDate->ISO: ",endDate)
     }
 
     

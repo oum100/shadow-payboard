@@ -171,27 +171,19 @@
                 </div>
 
                 <div v-if="toggleSW == 'weekly'" class="q-mt-md q-gutter-md">
-                    {{ toggleSW }}
+                    <q-select filled dense v-model="selectedWeek" :options="optionsWeek">
+                        <template v-slot:prepend>
+                            <q-icon name="event" />
+                        </template>
+                    </q-select>
                 </div>
 
                 <div v-if="toggleSW == 'monthly'" class="q-mt-md q-gutter-md">
-                    <div class="q-mb-md" style="max-width: 250px; width:100%">
-                        <q-input filled dense v-model="selectedMonth" label="Start Month">
-                            <template v-slot:prepend>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="selectedMonth" mask="MMMM" format24h
-                                            @update:model-value="onUpdateMonth" default-view="Months">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                        {{ selectedMonth }}
-                    </div>
+                    <q-select filled dense v-model="selectedMonth" :options="optionsMonth">
+                        <template v-slot:prepend>
+                            <q-icon name="event" />
+                        </template>
+                    </q-select>
                 </div>
 
                 <div v-if="toggleSW == 'yearly'" class="q-mt-md q-gutter-md">
@@ -208,7 +200,7 @@
     <div class="row q-ma-md justify-center items-center">
         <div class="col-md-10">
             <q-card>
-                <q-card-section>
+                <!-- <q-card-section>
                     <div class="row justify-end q-pr-md">
                         <q-option-group
                             v-model="optionChart"
@@ -218,7 +210,7 @@
                             inline
                         />
                     </div>
-                </q-card-section>
+                </q-card-section> -->
                 <q-card-section>
                     <ClientOnly>
                         <apexchart type="area" height="330" :options="chartOptions" :series=series></apexchart>
@@ -235,10 +227,11 @@
 
 <script setup lang="ts">
 import { date } from 'quasar'
+import moment from "moment-timezone";
 
 let toggleSW = ref('daily')
-const selectedWeek = ref()
-const selectedMonth = ref('Aug')
+const selectedWeek = ref({"label": "Week1", "value": "W1"} )
+const selectedMonth = ref({"label": "August", "value": "AUG"} )
 const selectedYear = ref('2024')
 const startDate = ref()
 const startDay = ref()
@@ -269,56 +262,85 @@ const revenueMachineCash = Array(9).fill(0);
 
 const optionChart = ref(['op1'])
 const optionsChart1 = ref([
-{
-          label: 'Machine',
-          value: 'op1'
-        },
-        {
-          label: 'Shop',
-          value: 'op2'
-        },
+    {label: 'Machine',value: 'op1'},
+    {label: 'Shop',value: 'op2'},
 ])
 
-
-const weekOptions = ref([
-    'Week1', 'Week2', 'Week3', 'Week4', 'Week5'
+const optionsWeek = ref([
+    {label: 'Week1',value: 'W1'},
+    {label: 'Week2',value: 'W2'},
+    {label: 'Week3',value: 'W3'},
+    {label: 'Week4',value: 'W4'},
+    {label: 'Week5',value: 'W5'}
 ])
 
-const monthOptions = ref([
-    'JAN',
-    'FEB',
-    'MAR',
-    'APR',
-    'MAY',
-    'JUN',
-    'JUL',
-    'AUG',
-    'SEP',
-    'OCT',
-    'NOV',
-    'DEC'
+const optionsMonth = ref([
+    {label:'January',value: 'JAN'},
+    {label:'February',value: 'FEB'},
+    {label:'March',value: 'MAR'},
+    {label:'April',value: 'APR'},
+    {label:'May',value: 'MAY'},
+    {label:'June',value: 'JUN'},
+    {label:'July',value: 'JUL'},
+    {label:'August',value: 'AUG'},
+    {label:'September',value: 'SEP'},
+    {label:'October',value: 'OCT'},
+    {label:'November',value: 'NOV'},
+    {label:'December',value: 'DEC'},
 ])
 
 // Initial StartDate and EndDate
-let yourDate = new Date(Date.now())
-console.log("yourDate A", yourDate)
+// let yourDate = new Date(Date.now())
+// console.log("yourDate A", yourDate)
 
-if (!startDate.value) {
-    yourDate.setHours(0)
-    yourDate.setMinutes(0)
-    startDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
-    console.log("Start Date: ", startDate.value)
-}
+// var thisDay1 = moment.tz(String(new Date(Date.now())), "Asia/Bangkok").toISOString();
+// console.log("This Day1",thisDay1)
 
-if ((!endDate.value)) {
-    yourDate.setHours(23)
-    yourDate.setMinutes(59)
-    endDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
-    console.log("End Date: ", endDate.value)
-}
+// const thisMonth = moment(thisDay).month()
+// console.log("This Month", thisMonth)
+
+// console.log("moment Month",thisMonth)
+
+// const today = moment(thisDay)
+// console.log("show today",today)
+// const start = today.clone().startOf('day').format("YYYY-MM-DD HH:mm")
+// console.log("startOf: ",start )
+// const end = today.clone().endOf('day').format("YYYY-MM-DD HH:mm")
+// console.log("end Of: ",end)
+
+// const stDate = ref()
+
+// !stDate.value?stDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm"):console.log("stDate: ",stDate.value)
+// console.log("stDate: ",stDate.value)
+// var thisDay = moment.tz(String(new Date(Date.now())), "Asia/Bangkok").toISOString();
+// console.log("This Day: ",thisDay)
+
+const today = moment(String(new Date(Date.now()))).tz("Asia/Bangkok")
+console.log("Today: ",today)
+
+!startDate.value?startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss"):console.log("Start Date: ", startDate.value) 
+console.log("Start Date: ", startDate.value)
+!endDate.value?endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss"):console.log("End Date: ", endDate.value)
+console.log("End Date: ", endDate.value)
+
+// if (!startDate.value) {
+    
+//     yourDate.setHours(0)
+//     yourDate.setMinutes(0)
+//     startDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
+//     console.log("Start Date: ", startDate.value)
+
+// }
+
+// if ((!endDate.value)) {
+//     yourDate.setHours(23)
+//     yourDate.setMinutes(59)
+//     endDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
+//     console.log("End Date: ", endDate.value)
+// }
 
 const optionList = await $fetch('/api/transaction/listBranchOption')
-    console.log(optionList)
+    // console.log("listBranchOption",optionList)
 
     listBranchOption = ref(['ALL'])
     optionList.forEach((item: any) => {
@@ -358,11 +380,11 @@ const chartOptionsByType = ref({
         opacity: 1
     },
     tooltip: {
-        //   y: {
-        //     formatter: function (val) {
-        //       return "$ " + val + " thousands"
-        //     }
-        //   }
+          y: {
+            formatter: function (val:any) {
+              return "$ " + val + " Baht"
+            }
+          }
     }
 })
 
@@ -379,8 +401,8 @@ const chartOptions = ref({
         enabled: false, // Disable data labels
     },
     stroke: {
-        width: 2,
-        // colors: ['#fff']
+        width: [4,2,2,2,2],
+        // colors: ['transparent']
     },
     legend: {
         show: true,
@@ -402,20 +424,20 @@ const chartOptions = ref({
             text: 'Hours',
         },
     },
-    colors: ['#8d9190', '#ff038d', '#039dfc','#018a08','#fc7f03'], //
+    colors: ['#5c595c','#005eff','#00ffd9'], //
     markers: {
-        size: [4, 4, 4]
+        size: 4
     },
     fill: {
         type: 'gradient',
         gradient: {
             shade: 'light',
             type: 'vertical',
-            shadeIntensity: 0.5,
+            shadeIntensity: 0.8,
             gradientToColors: undefined, // Optional: Customize gradient
             inverseColors: true,
             opacityFrom: 0.8,
-            opacityTo: 0,
+            opacityTo: 0.8,
             stops: [0, 90, 100],
         },
     },
@@ -423,12 +445,8 @@ const chartOptions = ref({
 })
 
 
-onMounted(() => {
-    
-})
-
     const totalResult = await getRowsNumberCount(branchSelected.value)
-    console.log("totalResult: ", totalResult)
+    // console.log("totalResult: ", totalResult)
 
     transTotal.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._count)
     transWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._count)
@@ -469,19 +487,19 @@ onMounted(() => {
         }
     ]
 
-    console.log("seriesRevenue", seriesRevenue.value)
+    // console.log("seriesRevenue", seriesRevenue.value)
 
     //Call api direct
     const result:any = await $fetch('/api/transaction/groupByHour?filter='
         + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
 
-    console.log("series data1", result.data)
+    // console.log("series data1", result.data)
     series.value = result.data
   
 
 async function getRevenue(branchSelected:string) {
     const totalResult = await getRowsNumberCount(branchSelected)
-    console.log("totalResult: ", totalResult)
+    // console.log("totalResult: ", totalResult)
 
     transTotal.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._count)
     transWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._count)
@@ -531,7 +549,7 @@ async function getRevenue(branchSelected:string) {
         }
     ]
 
-    console.log("seriesRevenue", seriesRevenue.value)
+    // console.log("seriesRevenue", seriesRevenue.value)
 
     // //Call api direct
     // const result:any = await $fetch('/api/transaction/groupByHour?filter='
@@ -559,23 +577,23 @@ async function fetchData(filter: string, startDate: string, endDate: string) {
 async function onStartDate(value: any, reason: any, details: any) {
     if (startDay && endDay) {
         totalDay.value = endDay.value - startDay.value
-        // tableRef.value.requestServerInteraction()
-        console.log("onStartDate->TotalDay: ", totalDay)
+        
+        // console.log("onStartDate->TotalDay: ", totalDay)
     }
   
     getRevenue(branchSelected.value)
     const result:any = await $fetch('/api/transaction/groupByHour?filter='
         + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
 
-    console.log("series data1", result.data)
+    // console.log("series data1", result.data)
     series.value = result.data
 }
 
 async function onEndDate(value: any, reason: any, details: any) {
     if (startDay && endDay) {
         totalDay.value = endDay.value - startDay.value
-        // tableRef.value.requestServerInteraction()
-        console.log("onEndDate->TotalDay: ", totalDay)
+       
+        // console.log("onEndDate->TotalDay: ", totalDay)
     }
     getRevenue(branchSelected.value)
     const result:any = await $fetch('/api/transaction/groupByHour?filter='
@@ -611,7 +629,7 @@ async function getRowsNumberCount(filter: any): Promise<any> {
     const rowsCount:any = await $fetch('/api/transaction/recordsCount?filter='
         + filter + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
 
-    console.log("rowCounts Result:", rowsCount)
+    // console.log("rowCounts Result:", rowsCount)
     return rowsCount
 }
 

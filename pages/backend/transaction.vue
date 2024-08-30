@@ -164,7 +164,7 @@
                             style="width: 200px" @update:model-value="showTrans()" />
                     </div>
 
-                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:210px">
+                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:220px">
                         <q-input filled dense v-model="startDate" label="Start Date">
                             <template v-slot:prepend>
                                 <q-icon name="event" class="cursor-pointer">
@@ -195,7 +195,7 @@
                         </q-input>
                     </div>
 
-                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:210px">
+                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:220px">
                         <q-input filled dense v-model="endDate" label="End Date">
                             <template v-slot:prepend>
                                 <q-icon name="event" class="cursor-pointer">
@@ -311,6 +311,7 @@
 
 <script setup lang="ts">
 import { date } from 'quasar'
+import moment from 'moment-timezone'
 
 const tableRef = ref()
 const rows = ref()
@@ -390,31 +391,37 @@ async function onRequest(props: any) {
     console.log("Execute here")
 
     //Set startDate and endDate is today        
-    let yourDate = new Date(Date.now())
-    console.log("yourDate A", yourDate)
+    // let yourDate = new Date(Date.now())
+    // console.log("yourDate A", yourDate)
 
-    if (!startDate.value) {
-        yourDate.setHours(0)
-        yourDate.setMinutes(0)
-        startDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
-        console.log("Start Date: ", startDate.value)
-    }
+    // if (!startDate.value) {
+    //     yourDate.setHours(0)
+    //     yourDate.setMinutes(0)
+    //     startDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
+    //     console.log("Start Date: ", startDate.value)
+    // }
 
-    if ((!endDate.value)) {
-        yourDate.setHours(23)
-        yourDate.setMinutes(59)
-        endDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
-        console.log("End Date: ", endDate.value)
-    }
+    // if ((!endDate.value)) {
+    //     yourDate.setHours(23)
+    //     yourDate.setMinutes(59)
+    //     endDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
+    //     console.log("End Date: ", endDate.value)
+    // }
+
+    // var thisDay = moment.tz(String(new Date(Date.now())), "Asia/Bangkok").toISOString();
+    // const today = moment(thisDay)
+
+    const today = moment(String(new Date(Date.now()))).tz("Asia/Bangkok")
+    console.log("Today: ",today)
+    !startDate.value?startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss"):console.log("Start Date: ", startDate.value) 
+    console.log("Start Date: ", startDate.value)
+    !endDate.value?endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss"):console.log("End Date: ", endDate.value)
+    console.log("End Date: ", endDate.value)
 
     //Making Branch List
     const optionList = await $fetch('/api/transaction/listBranchOption')
-    console.log(optionList)
+    // console.log("listBranchOption",optionList)
 
-    // partnerResult.value?.data.forEach((item: any) => {
-    //     // console.log("Each Item:",item)
-    //     listPartnerOption.value.push(item)
-    // })
     listBranchOption = ref(['ALL'])
     optionList.forEach((item: any) => {
         listBranchOption.value.push(item.branchName)
@@ -586,7 +593,7 @@ async function getRowsNumberCount(filter: any) {
     const rowsCount: any = await $fetch('/api/transaction/recordsCount?filter='
         + filter + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
 
-    console.log("Result:", rowsCount)
+    // console.log("Result:", rowsCount)
     return rowsCount
 }
 
