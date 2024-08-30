@@ -99,16 +99,16 @@ export default defineEventHandler(async (event) => {
         type: "line",
         data: hourlyAmounts,
       },
-    //   {
-    //     name: "Washer",
-    //     type: "column",
-    //     data: hourlyWasher,
-    //   },
-    //   {
-    //     name: "Dryer",
-    //     type: "column",
-    //     data: hourlyDryer,
-    //   },
+      {
+        name: "Washer",
+        type: "column",
+        data: hourlyWasher,
+      },
+      {
+        name: "Dryer",
+        type: "column",
+        data: hourlyDryer,
+      },
       {
         name: "SkyView",
         type: "area",
