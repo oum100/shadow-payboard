@@ -68,11 +68,12 @@ export default defineEventHandler(async (event) => {
 
     // Iterate over the transactions to group amounts by hour
     trans.forEach((item) => {
-    //   const hour:any = new Date(item.createdAt).toLocaleString(
-    //     "en-US", { timeZone: "Asia/Bangkok", hour: "2-digit", hour12: false });
+        // const hourString = new Date(item.createdAt).toLocaleString("en-US", { timeZone: "Asia/Bangkok", hour: "2-digit", hour12: false });
+        // const hour = parseInt(hourString, 10);
 
-    const hour = new Date(item.createdAt).getHours();
-
+        const hour = moment(item.createdAt).tz("Asia/Bangkok").hour();
+    // const hour = new Date(item.createdAt).getHours();  //Original
+    
     console.log("And hour",hour)
     
       hourlyAmounts[hour] += item.amount ?? 0;
