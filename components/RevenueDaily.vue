@@ -424,7 +424,7 @@ const chartOptions = ref({
             text: 'Hours',
         },
     },
-    colors: ['#5c595c','#005eff','#00ffd9'], //
+    colors: ['#5c595c','#005eff','#00ffd9','#fa64f2','#f5dd58'], //
     markers: {
         size: 4
     },
