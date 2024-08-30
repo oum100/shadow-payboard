@@ -20,7 +20,6 @@ export default defineEventHandler(async(event)=>{
     console.log("->eDate::",eDate)
 
     
-
     let startDate, endDate
     if(query.startDate && query.endDate){
         startDate = moment.tz(String(sDate),'Asia/Bangkok').toISOString()
