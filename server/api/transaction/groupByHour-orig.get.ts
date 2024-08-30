@@ -62,6 +62,8 @@ export default defineEventHandler(async (event) => {
     trans.forEach((item) => {
       const hour = new Date(item.createdAt).getHours();
       hourlyAmounts[hour] += item.amount ?? 0;
+
+      
     });
 
     trans.forEach((item) => {

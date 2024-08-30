@@ -1,5 +1,5 @@
 <template>
-    <div class="row q-mt-sm items-start" style="height:350px;">
+    <div class="row q-mt-sm items-start" style="height:300px;">
         <div class="column col-3">
             <div class="col q-px-md">
                 <q-card class="text-white"
@@ -38,7 +38,7 @@
                     </q-card-section>
                 </q-card>
             </div>
-            <div class="col q-mt-xl q-px-md">
+            <div class="col q-mt-sm q-px-md">
                 <q-card class="text-white"
                     style="background: radial-gradient(circle, #35a2ff 20%, #014a88 100%); height:150px">
                     <q-card-section>
@@ -79,11 +79,11 @@
 
         <div class="col-6">
             <div class="q-px-md">
-                <q-card style="height:350px">
+                <q-card style="height:310px">
                     <q-card-section class="q-py-sm">
-                        <div class="text-h6">Daily revenue by machine</div>
+                        <div class="text-h6">Revenue by machine type</div>
                         <ClientOnly>
-                            <apexchart type="bar" height="300" :options="chartOptionsByType" :series=seriesRevenue>
+                            <apexchart type="bar" height="250" :options="chartOptionsByType" :series=seriesRevenue>
                             </apexchart>
                         </ClientOnly>
                     </q-card-section>
@@ -209,8 +209,19 @@
         <div class="col-md-10">
             <q-card>
                 <q-card-section>
+                    <div class="row justify-end q-pr-md">
+                        <q-option-group
+                            v-model="optionChart"
+                            :options="optionsChart1"
+                            color="blue"
+                            type="toggle"
+                            inline
+                        />
+                    </div>
+                </q-card-section>
+                <q-card-section>
                     <ClientOnly>
-                        <apexchart type="area" height="350" :options="chartOptions" :series=series></apexchart>
+                        <apexchart type="area" height="330" :options="chartOptions" :series=series></apexchart>
                     </ClientOnly>
                 </q-card-section>
             </q-card>
@@ -255,6 +266,18 @@ const revenueCash = ref('')
 const revenueMachine = Array(9).fill(0);
 const revenueMachineQR = Array(9).fill(0);
 const revenueMachineCash = Array(9).fill(0);
+
+const optionChart = ref(['op1'])
+const optionsChart1 = ref([
+{
+          label: 'Machine',
+          value: 'op1'
+        },
+        {
+          label: 'Shop',
+          value: 'op2'
+        },
+])
 
 
 const weekOptions = ref([

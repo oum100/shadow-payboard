@@ -68,7 +68,13 @@ export default defineEventHandler(async (event) => {
 
     // Iterate over the transactions to group amounts by hour
     trans.forEach((item) => {
-      const hour = new Date(item.createdAt).getHours();
+      const hour:any = new Date(item.createdAt).toLocaleString(
+        "en-US", { timeZone: "Asia/Bangkok", hour: "2-digit", hour12: false });
+
+    // const hour = new Date(item.createdAt).getHours();
+
+    console.log("And hour",hour)
+    
       hourlyAmounts[hour] += item.amount ?? 0;
 
       // Further classify by machine type
@@ -83,7 +89,6 @@ export default defineEventHandler(async (event) => {
       }else if(item.device.branch?.branchName === "RGH-18"){
         hourlyBranch2[hour] += item.amount ?? 0;
       }
-
 
     });
 
