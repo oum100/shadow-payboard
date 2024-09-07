@@ -438,15 +438,15 @@ async function onRequest(props: any) {
     const totalResult = await getRowsNumberCount(branchSelected.value)
     console.log("totalResult: ", totalResult)
 
-    pagination.value.rowsNumber = totalResult.totalCount.countAll._count
+    pagination.value.rowsNumber = totalResult.total.countAll._count
     console.log("pagination-rowsNumber: ", pagination.value.rowsNumber)
 
-    transTotal.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._count)
+    transTotal.value = new Intl.NumberFormat('en-US').format(totalResult.total.countAll._count)
     transWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._count)
     transDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryer.countAll._count)
 
-    // revenue.value = totalResult.totalCount._sum.amount
-    revenue.value = new Intl.NumberFormat('en-US').format(totalResult.totalCount.countAll._sum.amount)
+    // revenue.value = totalResult.total._sum.amount
+    revenue.value = new Intl.NumberFormat('en-US').format(totalResult.total.countAll._sum.amount)
 
     revenueWasher.value = new Intl.NumberFormat('en-US').format(totalResult.washer.countAll._sum.amount)
     revenueDryer.value = new Intl.NumberFormat('en-US').format(totalResult.dryer.countAll._sum.amount)
@@ -456,11 +456,11 @@ async function onRequest(props: any) {
     // const paymentRevenue: any = await getPaymentRevenue(branchSelected.value)
     // console.log("paymentRevenue: ", paymentRevenue)
 
-    counterQR.value = totalResult.totalCount.countQR._count
-    counterCash.value = totalResult.totalCount.countCash._count
+    counterQR.value = totalResult.total.countQR._count
+    counterCash.value = totalResult.total.countCash._count
 
-    revenueQR.value = totalResult.totalCount.countQR._sum.amount
-    revenueCash.value = totalResult.totalCount.countCash._sum.amount
+    revenueQR.value = totalResult.total.countQR._sum.amount
+    revenueCash.value = totalResult.total.countCash._sum.amount
 
 
 

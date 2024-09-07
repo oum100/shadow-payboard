@@ -1,13 +1,26 @@
 <template>
-    <div class="row q-pa-md justify-center items-center">
+    <div class="row q-pb-lg justify-center">
+        <q-toggle v-model="dataset" label="Data Set 2" />
+        <!-- <q-toggle v-model="denseOpts" label="Dense options" /> -->
+    </div>
+    <div v-if="dataset" class="row q-pa-md justify-center items-center">
         <q-card style="width:1000px">
             <q-card-section>
                 <ClientOnly>
-                    <apexchart type="area" height="330" :options="revenueChartOptions" :series=series></apexchart>
+                    <apexchart type="area" height="330" :options="revenueChartOptions" :series="series2"></apexchart>
                 </ClientOnly>
             </q-card-section>
         </q-card>
     </div>
+    <div v-else class="row q-pa-md justify-center items-center">
+        <q-card style="width:1000px">
+            <q-card-section>
+                <ClientOnly>
+                    <apexchart type="area" height="330" :options="revenueChartOptions" :series="series1"></apexchart>
+                </ClientOnly>
+            </q-card-section>
+        </q-card>
+    </div> 
 </template>
 
 
@@ -16,6 +29,7 @@ import moment from "moment-timezone";
 
 const startDate = ref()
 const endDate = ref()
+const dataset = ref(false)
 
 const startDay = ref()
 const endDay = ref()
@@ -33,8 +47,9 @@ console.log("Start Date: ", startDate.value)
 console.log("End Date: ", endDate.value)
 
 
+const showSeries:any = ref([])
 
-const series = ref([
+const series1 = ref([
     {
         name: 'Total',
         type: 'line',
@@ -47,15 +62,25 @@ const series = ref([
     },
 ])
 
-// const series = [{
-//     name: 'Website Blog',
-//     type: 'column',
-//     data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
-// }, {
-//     name: 'Social Media',
-//     type: 'line',
-//     data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16]
-// }]
+const series2 = ref([
+    {
+        name: 'Website Blog',
+        type: 'column',
+        data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
+    }, 
+    {
+        name: 'Social Media',
+        type: 'line',
+        data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16]
+    }
+])
+
+if(!dataset){
+    showSeries.value = series1.value
+}else{
+    showSeries.value = series2.value
+}
+
 
 const revenueChartOptions = ref({
     chart: {

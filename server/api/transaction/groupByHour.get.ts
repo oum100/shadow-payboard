@@ -41,6 +41,7 @@ export default defineEventHandler(async (event) => {
             type: true,
           },
         },
+        paymentBy:true,
         amount: true,
         createdAt: true,
       },
@@ -52,12 +53,32 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // console.log("Result Trans: ", trans);
+    console.log("Result Trans: ", trans);
 
     // Initialize arrays to hold hourly amounts for different machine types
-    const hourlyAmounts = Array(24).fill(0);
+    const hourlyTotal = Array(24).fill(0);
+    const hourlyTotalByQR = Array(24).fill(0);
+    const hourlyTotalByCash = Array(24).fill(0);
+
     const hourlyWasher = Array(24).fill(0);
+    const hourlyWasherByQR = Array(24).fill(0);
+    const hourlyWasherByCash = Array(24).fill(0);
+
     const hourlyDryer = Array(24).fill(0);
+    const hourlyDryerByQR = Array(24).fill(0);
+    const hourlyDryerByCash = Array(24).fill(0);
+
+    const hourlyTotalTrans = Array(24).fill(0)
+    const hourlyTotalTransByQR = Array(24).fill(0)
+    const hourlyTotalTransByCash = Array(24).fill(0)
+
+    const hourlyWasherTrans = Array(24).fill(0)
+    const hourlyWasherTransByQR = Array(24).fill(0)
+    const hourlyWasherTransByCash = Array(24).fill(0)
+
+    const hourlyDryerTrans = Array(24).fill(0);
+    const hourlyDryerTransByQR = Array(24).fill(0)
+    const hourlyDryerTransByCash = Array(24).fill(0)
 
     const hourlyBranch = Array(10).fill(0);
     hourlyBranch[0] = Array(24).fill(0);
@@ -66,25 +87,34 @@ export default defineEventHandler(async (event) => {
     const hourlyBranch1 = Array(24).fill(0);
     const hourlyBranch2 = Array(24).fill(0);
 
+
+
     // Iterate over the transactions to group amounts by hour
     trans.forEach((item) => {
-      // const hourString = new Date(item.createdAt).toLocaleString("en-US", { timeZone: "Asia/Bangkok", hour: "2-digit", hour12: false });
-      // const hour = parseInt(hourString, 10);
-
+      // An hour must be in correct timezone.
       const hour = moment(item.createdAt).tz("Asia/Bangkok").hour();
-      // const hour = new Date(item.createdAt).getHours();  //Original
-
-    //   console.log("And hour", hour);
-
-      hourlyAmounts[hour] += item.amount ?? 0;
+      hourlyTotal[hour] += item.amount ?? 0;
+      if (item.paymentBy === "qrcode") {}
+      if (item.paymentBy === "cash") {} 
 
       // Further classify by machine type
       if (item.device.type === "Washer") {
         hourlyWasher[hour] += item.amount ?? 0;
+        if (item.paymentBy === "qrcode") {}
+        if (item.paymentBy === "cash") {}
       } else if (item.device.type === "Dryer") {
         hourlyDryer[hour] += item.amount ?? 0;
+        if (item.paymentBy === "qrcode") {}
+        if (item.paymentBy === "cash") {}
       }
 
+      // Futher classify by paymentBy
+      if(item.paymentBy === 'qrcode'){
+        
+      }
+
+
+      // Further classify by branch
       if (item.device.branch?.branchName === "SkyView") {
         hourlyBranch1[hour] += item.amount ?? 0;
       } else if (item.device.branch?.branchName === "RGH-18") {
@@ -93,36 +123,40 @@ export default defineEventHandler(async (event) => {
     });
 
     // Prepare the result object with the grouped data
-    const result = [
-      {
-        name: "Total",
-        type: "line",
-        data: hourlyAmounts,
-      },
-      {
-        name: "Washer",
-        type: "column",
-        data: hourlyWasher,
-      },
-      {
-        name: "Dryer",
-        type: "column",
-        data: hourlyDryer,
-      },
-      {
-        name: "SkyView",
-        type: "area",
-        data: hourlyBranch1,
-      },
-      {
-        name: "RGH-18",
-        type: "area",
-        data: hourlyBranch2,
-      },
-    ];
+    const result = {
+        revenue:[
+            {
+              name: "Total",
+              type: "line",
+              data: hourlyTotal,
+            },
+            {
+              name: "Washer",
+              type: "column",
+              data: hourlyWasher,
+            },
+            {
+              name: "Dryer",
+              type: "column",
+              data: hourlyDryer,
+            },
+            {
+              name: "SkyView",
+              type: "area",
+              data: hourlyBranch1,
+            },
+            {
+              name: "RGH-18",
+              type: "area",
+              data: hourlyBranch2,
+            },
+          ],
+        transaction:[]
+    }
 
     return {
       data: result,
+        // data: trans,
     };
   } else {
     const trans = await prisma.transactions.findMany({
@@ -149,7 +183,7 @@ export default defineEventHandler(async (event) => {
     // console.log("Result Trans: ", trans);
 
     // Initialize arrays to hold hourly amounts for different machine types
-    const hourlyAmounts = Array(24).fill(0);
+    const hourlyTotal = Array(24).fill(0);
     const hourlyWasher = Array(24).fill(0);
     const hourlyDryer = Array(24).fill(0);
 
@@ -157,7 +191,7 @@ export default defineEventHandler(async (event) => {
     trans.forEach((item) => {
   
       const hour = moment(item.createdAt).tz("Asia/Bangkok").hour();
-      hourlyAmounts[hour] += item.amount ?? 0;
+      hourlyTotal[hour] += item.amount ?? 0;
 
       // Further classify by machine type
       if (item.device.type === "Washer") {
@@ -168,20 +202,26 @@ export default defineEventHandler(async (event) => {
     });
 
     // Prepare the result object with the grouped data
-    const result = [
-      {
-        name: "Total",
-        data: hourlyAmounts,
-      },
-      {
-        name: "Washer",
-        data: hourlyWasher,
-      },
-      {
-        name: "Dryer",
-        data: hourlyDryer,
-      },
-    ];
+    const result = {
+        revenue:[
+            {
+              name: "Total",
+              type: "area",
+              data: hourlyTotal,
+            },
+            {
+              name: "Washer",
+              type: "column",
+              data: hourlyWasher,
+            },
+            {
+              name: "Dryer",
+              type: "column",
+              data: hourlyDryer,
+            }
+          ],
+        transaction:[]
+    }
 
     return {
       data: result,

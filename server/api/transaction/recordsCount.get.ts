@@ -174,7 +174,7 @@ export default defineEventHandler(async(event)=>{
         })        
 
         return {
-            totalCount: {
+            total: {
                 countAll: totalCount,
                 countQR: totalCountQR,
                 countCash: totalCountCash,
@@ -349,7 +349,29 @@ export default defineEventHandler(async(event)=>{
         })        
 
         return {
-            totalCount: {
+            // revenue:{
+            //     totalCount: {
+            //         countAll: totalCount,
+                    
+            //         countQR: totalCountQR,
+            //         countCash: totalCountCash,
+            //     },
+            //     washer:{
+            //         countAll: washerCount,
+            //         countQR: washerQRCount,
+            //         countCash: washerCashCount
+            //     },    
+            //     dryer:{
+            //         countAll: dryerCount,
+            //         countQR:  dryerQRCount,
+            //         countCash: DryerCashCount
+            //     }  
+            // },
+            // transaction:{
+            //     total:{
+            //     }
+            // },
+            total: {
                 countAll: totalCount,
                 countQR: totalCountQR,
                 countCash: totalCountCash,
@@ -363,7 +385,7 @@ export default defineEventHandler(async(event)=>{
                 countAll: dryerCount,
                 countQR:  dryerQRCount,
                 countCash: DryerCashCount
-            }    
+            }  
         }
     }
 })
