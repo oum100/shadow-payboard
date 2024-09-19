@@ -712,7 +712,7 @@ async function getRowsNumberCount(filter: any): Promise<any> {
 }
 
 /* Responsive for smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .select-date {
         order: 1;
         max-height: 250px;
