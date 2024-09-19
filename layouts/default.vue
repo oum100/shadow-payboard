@@ -11,6 +11,6 @@
                 <slot />
             </q-page>
         </q-page-container>
-        <Footer />
+        <!-- <Footer /> -->
     </q-layout>
 </template>

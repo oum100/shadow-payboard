@@ -1,6 +1,7 @@
 <template>
-    <div class="row q-mt-sm items-start" style="height:300px;">
-        <div class="column col-3">
+    <div class="q-pa-md">
+        <div class="row q-mt-sm items-start" style="height:300px;">
+        <div id="ShowRevenueNumber" class="col-12 col-md-3 show-revenue-number">
             <div class="col q-px-md">
                 <q-card class="text-white"
                     style="background: radial-gradient(circle, #787777 20%,#403e3f 80%); height:150px">
@@ -77,164 +78,138 @@
             </div>
         </div>
 
-        <div class="col-6">
+        <div id="MiddleChart" class="col-12 col-md-6 machine-chart">
             <div class="q-px-md">
                 <q-card style="height:310px">
                     <q-card-section class="q-py-sm">
                         <div class="text-h6">Revenue by machine type</div>
                         <ClientOnly>
-                            <apexchart type="bar" height="250" :options="chartOptionsByType" :series=seriesRevenue></apexchart>
+                            <apexchart type="bar" height="250" :options="chartOptionsByType" :series=seriesRevenue>
+                            </apexchart>
                         </ClientOnly>
                     </q-card-section>
                 </q-card>
             </div>
         </div>
 
-        <div class="column col-3 items-center" style="height:350px;">
-            <div class="q-mb-md">
-                <div class="column col-12 col-md-4 q-pr-sm items-end">
-                    <q-btn-toggle v-model="toggleSW" color="blue-6" text-color="white" toggle-color="blue-8"
-                        toggle-text-color="white" rounded unelevated glossy size="0.72rem" :options="btnOptions" />
-                </div>
-            </div>
-
-            <div class="q-guttar-md">
-                <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
-                    style="width:250px" @update:model-value="onStartDate" />
-
-                <div v-if="toggleSW == 'daily'" class="q-mt-md q-gutter-md">
-                    <div class="q-mb-md" style="max-width: 250px; width:100%">
-                        <DatePicker v-model:selectedDate="startDate" :time="false"
-                         @updated="onUpdate"
-                        />
-                        
-                        <!-- <q-input filled dense v-model="startDate" label="Daily Of">
-                            <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="startDate" mask="YYYY-MM-DD HH:mm:ss" format24h
-                                            @update:model-value="onStartDate"
-                                            v-close-popup="dateClosePopup" 
-                                            @navigation="dateClosePopup = false"
-                                            >
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input> -->
+        <div id="SelectDate" class="col-12 col-md-3 items-center select-date" style="height:350px;">
+            <div class="column items-center">
+                <div class="col">
+                    <div class="q-mb-md">
+                        <div class="column col-12 col-md-4 q-pr-sm items-end">
+                            <q-btn-toggle v-model="toggleSW" color="blue-6" text-color="white" toggle-color="blue-8"
+                                toggle-text-color="white" rounded unelevated glossy size="0.72rem" :options="btnOptions" />
+                        </div>
                     </div>
                 </div>
 
-                <div v-else-if="toggleSW == 'weekly'" class="q-mt-md q-gutter-md">
-                    <q-select filled dense v-model="selectedWeek" :options="optionsWeek">
-                        <template v-slot:prepend>
-                            <q-icon name="event" />
-                        </template>
-                    </q-select>
-                </div>
+                <div class="col">
+                    <div class="q-guttar-md col-xs-12 col-md-6">
+                        <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
+                            style="width:250px" @update:model-value="onStartDate" />
 
-                <div v-else-if="toggleSW == 'monthly'" class="q-mt-md q-gutter-md">
-                    <q-select filled dense v-model="selectedMonth" :options="optionsMonth">
-                        <template v-slot:prepend>
-                            <q-icon name="event" />
-                        </template>
-                    </q-select>
-                </div>
+                        <div v-if="toggleSW == 'daily'" class="q-mt-md q-gutter-md">
+                            <div class="q-mb-md col-xs-12 col-md-6" style="max-width: 250px;">
+                                <DatePicker v-model:selectedDate="startDate" :time="false" @updated="onUpdate" />
+                            </div>
+                        </div>
 
-                <div v-else-if="toggleSW == 'yearly'" class="q-mt-md q-gutter-md">
-                    {{ toggleSW }}
-                </div>
+                        <div v-else-if="toggleSW == 'weekly'" class="q-mt-md q-gutter-md">
+                            <q-select filled dense v-model="selectedWeek" :options="optionsWeek">
+                                <template v-slot:prepend>
+                                    <q-icon name="event" />
+                                </template>
+                            </q-select>
+                        </div>
 
-                <div v-else-if="toggleSW == 'range'" class="q-mt-md q-gutter-md">
-                    <div class="q-mb-md" style="max-width: 250px; width:100%">
-                        <q-input filled dense v-model="startDate" label="Start Date">
-                            <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="startDate" mask="YYYY-MM-DD HH:mm:ss" format24h
-                                            @update:model-value="onStartDate">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
-         
-                                <q-icon name="access_time" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-time v-model="startDate" mask="YYYY-MM-DD HH:mm:ss" format24h
-                                            @update:model-value="onStartDate">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-time>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                    </div>
-                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:100%">
-                        <q-input filled dense v-model="endDate" label="End Date">
-                            <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="endDate" mask="YYYY-MM-DD HH:mm:ss" format24h
-                                            @update:model-value="onStartDate">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
+                        <div v-else-if="toggleSW == 'monthly'" class="q-mt-md q-gutter-md">
+                            <q-select filled dense v-model="selectedMonth" :options="optionsMonth">
+                                <template v-slot:prepend>
+                                    <q-icon name="event" />
+                                </template>
+                            </q-select>
+                        </div>
 
-                                <q-icon name="access_time" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-time v-model="endDate" mask="YYYY-MM-DD HH:mm:ss" format24h
-                                            @update:model-value="onStartDate">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-time>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
+                        <div v-else-if="toggleSW == 'yearly'" class="q-mt-md q-gutter-md">
+                            {{ toggleSW }}
+                        </div>
+
+                        <div v-else-if="toggleSW == 'range'" class="q-mt-md q-gutter-md">
+                            <div class="q-mb-md" style="max-width: 250px; width:100%">
+                                <q-input filled dense v-model="startDate" label="Start Date">
+                                    <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                <q-date v-model="startDate" mask="YYYY-MM-DD HH:mm:ss" format24h
+                                                    @update:model-value="onStartDate">
+                                                    <div class="row items-center justify-end">
+                                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    </div>
+                                                </q-date>
+                                            </q-popup-proxy>
+                                        </q-icon>
+
+                                        <q-icon name="access_time" class="cursor-pointer">
+                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                <q-time v-model="startDate" mask="YYYY-MM-DD HH:mm:ss" format24h
+                                                    @update:model-value="onStartDate">
+                                                    <div class="row items-center justify-end">
+                                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    </div>
+                                                </q-time>
+                                            </q-popup-proxy>
+                                        </q-icon>
+                                    </template>
+                                </q-input>
+                            </div>
+                            <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:100%">
+                                <q-input filled dense v-model="endDate" label="End Date">
+                                    <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                <q-date v-model="endDate" mask="YYYY-MM-DD HH:mm:ss" format24h
+                                                    @update:model-value="onStartDate">
+                                                    <div class="row items-center justify-end">
+                                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    </div>
+                                                </q-date>
+                                            </q-popup-proxy>
+                                        </q-icon>
+
+                                        <q-icon name="access_time" class="cursor-pointer">
+                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                <q-time v-model="endDate" mask="YYYY-MM-DD HH:mm:ss" format24h
+                                                    @update:model-value="onStartDate">
+                                                    <div class="row items-center justify-end">
+                                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    </div>
+                                                </q-time>
+                                            </q-popup-proxy>
+                                        </q-icon>
+                                    </template>
+                                </q-input>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
             </div>
-
-
-
         </div>
-
-    </div>
-    <div class="row q-ma-md justify-center items-center">
-        <div class="col-md-10">
-            <q-card>
-                <!-- <q-card-section>
-                    <div class="row justify-end q-pr-md">
-                        <q-option-group
-                            v-model="optionChart"
-                            :options="optionsChart1"
-                            color="blue"
-                            type="toggle"
-                            inline
-                        />
-                    </div>
-                </q-card-section> -->
-                <q-card-section>
-                    <ClientOnly>
-                        <apexchart type="area" height="330" :options="chartOptions" :series=revenueData></apexchart>
-                        <!-- <apexchart type="area" height="330" :options="chartOptions" :series=transactionData></apexchart> -->
-                    </ClientOnly>
-                </q-card-section>
-            </q-card>
         </div>
-    </div>
+        <div class="row q-mt-md revenue-chart">
+            <div class="col-12 col-md-10">
+                <q-card>
+                    <q-card-section>
+                        <ClientOnly>
+                            <apexchart type="area" height="330" width="100%" :options="chartOptions" :series=revenueData>
+                            </apexchart>
+                        </ClientOnly>
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
+    </div>  
 </template>
 
 
@@ -244,6 +219,7 @@
 <script setup lang="ts">
 import { date } from 'quasar'
 import moment from "moment-timezone";
+
 
 let toggleSW = ref('daily')
 const selectedWeek = ref({ "label": "Week1", "value": "W1" })
@@ -290,7 +266,7 @@ const btnOptions = ref([
     { label: 'Weekly', value: 'weekly' },
     { label: 'Monthly', value: 'monthly' },
     { label: 'Yearly', value: 'yearly' },
-    
+
 ])
 
 const optionsWeek = ref([
@@ -316,31 +292,6 @@ const optionsMonth = ref([
     { label: 'December', value: 'DEC' },
 ])
 
-// Initial StartDate and EndDate
-// let yourDate = new Date(Date.now())
-// console.log("yourDate A", yourDate)
-
-// var thisDay1 = moment.tz(String(new Date(Date.now())), "Asia/Bangkok").toISOString();
-// console.log("This Day1",thisDay1)
-
-// const thisMonth = moment(thisDay).month()
-// console.log("This Month", thisMonth)
-
-// console.log("moment Month",thisMonth)
-
-// const today = moment(thisDay)
-// console.log("show today",today)
-// const start = today.clone().startOf('day').format("YYYY-MM-DD HH:mm")
-// console.log("startOf: ",start )
-// const end = today.clone().endOf('day').format("YYYY-MM-DD HH:mm")
-// console.log("end Of: ",end)
-
-// const stDate = ref()
-
-// !stDate.value?stDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm"):console.log("stDate: ",stDate.value)
-// console.log("stDate: ",stDate.value)
-// var thisDay = moment.tz(String(new Date(Date.now())), "Asia/Bangkok").toISOString();
-// console.log("This Day: ",thisDay)
 
 const today = moment(String(new Date(Date.now()))).tz("Asia/Bangkok")
 console.log("Today: ", today)
@@ -350,21 +301,6 @@ console.log("Start Date: ", startDate.value)
 !endDate.value ? endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss") : console.log("End Date: ", endDate.value)
 console.log("End Date: ", endDate.value)
 
-// if (!startDate.value) {
-
-//     yourDate.setHours(0)
-//     yourDate.setMinutes(0)
-//     startDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
-//     console.log("Start Date: ", startDate.value)
-
-// }
-
-// if ((!endDate.value)) {
-//     yourDate.setHours(23)
-//     yourDate.setMinutes(59)
-//     endDate.value = date.formatDate(yourDate, 'YYYY-MM-DD HH:mm')
-//     console.log("End Date: ", endDate.value)
-// }
 
 const optionList = await $fetch('/api/transaction/listBranchOption')
 // console.log("listBranchOption",optionList)
@@ -396,13 +332,13 @@ const chartOptionsByType = ref({
         width: 2,
         colors: ['transparent']
     },
-    colors: [ '#005eff','#00ffd9', '#fa64f2'],
+    colors: ['#005eff', '#00ffd9', '#fa64f2'],
     xaxis: {
         categories: ['Washer', 'Dryer', 'Water', 'Vending', 'Charger', 'Toy', 'GAS', 'CarWash', 'Coffee'],
     },
     yaxis: {
         title: {
-            text: 'Baht'   
+            text: 'Baht'
         }
     },
     fill: {
@@ -426,6 +362,7 @@ const chartOptions = ref({
             show: false,
         },
     },
+
     dataLabels: {
         enabled: false, // Disable data labels
     },
@@ -448,6 +385,41 @@ const chartOptions = ref({
             // endingShape: 'rounded'
         },
     },
+    responsive: [
+        {
+            breakpoint: 1024,
+            options: {
+                chart: {
+                    width: '100%',
+                },
+                legend: {
+                    position: 'bottom',
+                },
+            },
+        },
+        {
+            breakpoint: 768,
+            options: {
+                chart: {
+                    width: '90%',
+                },
+                legend: {
+                    position: 'bottom',
+                },
+            },
+        },
+        {
+            breakpoint: 600,
+            options: {
+                chart: {
+                    width: '100%',
+                },
+                legend: {
+                    position: 'bottom',
+                },
+            },
+        },
+    ],
     yaxis: {
         stepSize: 50,
         title: {
@@ -500,13 +472,13 @@ counterCash.value = totalResult.total.countCash._count
 revenueQR.value = new Intl.NumberFormat('en-US').format(totalResult.total.countQR._sum.amount)
 revenueCash.value = new Intl.NumberFormat('en-US').format(totalResult.total.countCash._sum.amount)
 
-revenueMachine[0] = totalResult.washer.countAll._sum.amount==null?0:totalResult.washer.countAll._sum.amount
-revenueMachineQR[0] = totalResult.washer.countQR._sum.amount==null?0:totalResult.washer.countQR._sum.amount
-revenueMachineCash[0] = totalResult.dryer.countCash._sum.amount==null?0:totalResult.dryer.countCash._sum.amount
+revenueMachine[0] = totalResult.washer.countAll._sum.amount == null ? 0 : totalResult.washer.countAll._sum.amount
+revenueMachineQR[0] = totalResult.washer.countQR._sum.amount == null ? 0 : totalResult.washer.countQR._sum.amount
+revenueMachineCash[0] = totalResult.dryer.countCash._sum.amount == null ? 0 : totalResult.dryer.countCash._sum.amount
 
-revenueMachine[1] = totalResult.dryer.countAll._sum.amount==null?0:totalResult.dryer.countAll._sum.amount
-revenueMachineQR[1] = totalResult.dryer.countQR._sum.amount==null?0:totalResult.dryer.countQR._sum.amount
-revenueMachineCash[1] = totalResult.dryer.countCash._sum.amount==null?0:totalResult.dryer.countCash._sum.amount
+revenueMachine[1] = totalResult.dryer.countAll._sum.amount == null ? 0 : totalResult.dryer.countAll._sum.amount
+revenueMachineQR[1] = totalResult.dryer.countQR._sum.amount == null ? 0 : totalResult.dryer.countQR._sum.amount
+revenueMachineCash[1] = totalResult.dryer.countCash._sum.amount == null ? 0 : totalResult.dryer.countCash._sum.amount
 
 seriesRevenue.value = [
     {
@@ -614,15 +586,15 @@ async function fetchData(filter: string, startDate: string, endDate: string) {
 }
 
 
-async function onUpdate(val:any){
+async function onUpdate(val: any) {
     endDate.value = val
     const today = moment(endDate.value)
-    console.log("Start Date Now: ",startDate.value)
+    console.log("Start Date Now: ", startDate.value)
     startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss")
 
-    console.log("Now StartDate is",startDate.value)
+    console.log("Now StartDate is", startDate.value)
     endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
-    console.log ("endDate Now", endDate.value)
+    console.log("endDate Now", endDate.value)
 
     getRevenue(branchSelected.value)
     const result: any = await $fetch('/api/transaction/groupByHour?filter='
@@ -634,7 +606,7 @@ async function onUpdate(val:any){
 
 async function onStartDate(value: any, reason: any, details: any) {
     dateClosePopup.value = true
-    if(toggleSW.value !== 'range'){
+    if (toggleSW.value !== 'range') {
         endDate.value = startDate.value
 
         // startDate.value = moment.tz(String(startBy), "Asia/Bangkok").toISOString()
@@ -643,7 +615,7 @@ async function onStartDate(value: any, reason: any, details: any) {
         endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
 
         // endDate.value = moment.tz(String(startDate.value), "Asia/Bangkok").toISOString()
-        console.log ("endDate Now", endDate.value)
+        console.log("endDate Now", endDate.value)
     }
 
     if (startDay && endDay) {
@@ -707,3 +679,58 @@ async function getRowsNumberCount(filter: any): Promise<any> {
 
 
 </script>
+
+<style scoped>
+.stacked-to-hor{
+    /* .row > div{
+        padding: 10px 15px;
+        background: rgba(#999,.15);
+        border: 1px solid rgba(#999,.2);
+    } */
+
+    .row + .row{
+        margin-top: 1rem;
+    }
+    
+}
+
+.select-date {
+    order: 3;
+}
+
+.show-revenue-number {
+    order: 1;
+}
+
+.machine-chart {
+    order: 2;
+}
+
+.revenue-chart{
+    order: 4;
+    margin-top: 2rem;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+    .select-date {
+        order: 1;
+        max-height: 250px;
+    }
+
+    .show-revenue-number {
+        order: 2;
+    }
+
+    .machine-chart {
+        order: 3;
+        margin-top: 1rem;
+    }
+
+    .revenue-chart{
+        order: 4;
+        padding:1rem;
+        margin-top: 37rem;
+    }
+}
+</style>

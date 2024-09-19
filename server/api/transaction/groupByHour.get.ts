@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    console.log("Result Trans: ", trans);
+    // console.log("Result Trans: ", trans);
 
     // Initialize arrays to hold hourly amounts for different machine types
     const hourlyTotal = Array(24).fill(0);

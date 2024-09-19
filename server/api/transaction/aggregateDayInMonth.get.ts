@@ -33,7 +33,7 @@ async function aggregateEachDayForMonth(
     where: {
       createdAt: {
         gte: new Date(year, sMonth - 1, 1), // Start of the month
-        lt: new Date(year, eMonth, 1), // Start of the next month
+        lt: new Date(year, eMonth-1, 1), // Start of the next month
       },
     },
     select: {
@@ -55,8 +55,28 @@ async function aggregateEachDayForMonth(
     }
     },
   });
+  // console.log("Raw Trans",trans)
 
-  console.log("Raw Trans",trans)
+  const wholeMonth = {
+    // date:moment.tz(new Date(year, month - 1, day, 0,0,0), "Asia/Bangkok").format("YYYY-MM-DD"),
+    startMonth:sMonth,
+    endMonth:eMonth,
+    revenue:{
+      total:0,
+      washer:0,
+      dryer:0,
+      qr:0,
+      cash:0
+    },
+    transaction:{
+        total:0,
+        washer:0,
+        dryer:0,
+        qr:0,
+        cash:0
+    }      
+  }
+
 
   // Aggregate transactions by day
   const aggregatedByDay = trans.reduce((acc, transaction) => {
