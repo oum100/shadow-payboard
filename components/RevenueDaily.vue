@@ -197,7 +197,7 @@
             </div>
         </div>
         </div>
-        <div class="row q-mt-md revenue-chart">
+        <div class="row q-mt-md justify-center revenue-chart">
             <div class="col-12 col-md-10">
                 <q-card>
                     <q-card-section>
