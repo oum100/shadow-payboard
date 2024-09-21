@@ -432,7 +432,7 @@ const chartOptions = ref({
             text: 'Hours',
         },
     },
-    colors: ['#959a9c', '#005eff', '#00ffd9', '#fa64f2', '#07aaf5'], //
+    colors: ['#959a9c', '#005eff', '#00ffd9', '#fa64f2', '#f5473b'], //
     markers: {
         size: 4
     },
@@ -474,7 +474,7 @@ revenueCash.value = new Intl.NumberFormat('en-US').format(totalResult.total.coun
 
 revenueMachine[0] = totalResult.washer.countAll._sum.amount == null ? 0 : totalResult.washer.countAll._sum.amount
 revenueMachineQR[0] = totalResult.washer.countQR._sum.amount == null ? 0 : totalResult.washer.countQR._sum.amount
-revenueMachineCash[0] = totalResult.dryer.countCash._sum.amount == null ? 0 : totalResult.dryer.countCash._sum.amount
+revenueMachineCash[0] = totalResult.washer.countCash._sum.amount == null ? 0 : totalResult.washer.countCash._sum.amount
 
 revenueMachine[1] = totalResult.dryer.countAll._sum.amount == null ? 0 : totalResult.dryer.countAll._sum.amount
 revenueMachineQR[1] = totalResult.dryer.countQR._sum.amount == null ? 0 : totalResult.dryer.countQR._sum.amount
