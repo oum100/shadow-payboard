@@ -106,11 +106,19 @@
                 <div class="col">
                     <div class="q-guttar-md col-xs-12 col-md-6">
                         <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
-                            style="width:250px" @update:model-value="onStartDate" />
+                            style="width:250px" @update:model-value="onUpdateBranch" />
 
                         <div v-if="toggleSW == 'daily'" class="q-mt-md q-gutter-md">
                             <div class="q-mb-md col-xs-12 col-md-6" style="max-width: 250px;">
-                                <DatePicker v-model:selectedDate="startDate" :time="false" @updated="onUpdate" />
+                                <!-- <DatePicker v-model:selectedDate="startDate" :time="false" @updated="onUpdate" label="Daily Of"/> -->
+                                <DataSelector
+                                    v-model:startDate=startDate
+                                    v-model:endDate=endDate
+                                    v-model:selectedType=selectedType
+                                    @update:startDate="onUpdateStartDate"
+                                    @update:endDate="onUpdateEndDate"
+                                    @update:selectedType="onUpdateSelectType"
+                                />
                             </div>
                         </div>
 
@@ -134,7 +142,7 @@
                             {{ toggleSW }}
                         </div>
 
-                        <div v-else-if="toggleSW == 'range'" class="q-mt-md q-gutter-md">
+                        <!-- <div v-else-if="toggleSW == 'range'" class="q-mt-md q-gutter-md">
                             <div class="q-mb-md" style="max-width: 250px; width:100%">
                                 <q-input filled dense v-model="startDate" label="Start Date">
                                     <template v-slot:append>
@@ -189,7 +197,7 @@
                                     </template>
                                 </q-input>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
@@ -228,6 +236,7 @@ const selectedYear = ref('2024')
 const startDate = ref()
 const startDay = ref()
 const endDate = ref()
+const selectedType = ref('SINGLE')
 const endDay = ref()
 const totalDay = ref()
 let branchSelected = ref('ALL')
@@ -262,7 +271,7 @@ const optionsChart1 = ref([
 
 const btnOptions = ref([
     { label: 'Daily', value: 'daily' },
-    { label: 'Range', value: 'range' },
+    // { label: 'Range', value: 'range' },
     { label: 'Weekly', value: 'weekly' },
     { label: 'Monthly', value: 'monthly' },
     { label: 'Yearly', value: 'yearly' },
@@ -585,16 +594,35 @@ async function fetchData(filter: string, startDate: string, endDate: string) {
     }
 }
 
+async function onUpdateSelectType(val:any){
+    // console.log("onUpdateSelectType: ",val)
+    // switch(val){
+    //     case 'SINGLE':
+            
+    //     break
+    //     case 'MULTIPLE':
+            
+    //     break
+    // }
+}
 
-async function onUpdate(val: any) {
-    endDate.value = val
-    const today = moment(endDate.value)
-    console.log("Start Date Now: ", startDate.value)
-    startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss")
+async function onUpdateStartDate(val: any) {
+    console.log("onUpdate val: ",val)
 
-    console.log("Now StartDate is", startDate.value)
-    endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
-    console.log("endDate Now", endDate.value)
+    if(selectedType.value == 'SINGLE'){
+        const today = moment(val)
+        // console.log("Start Date Now: ", startDate.value)
+        
+        startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss")
+        endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
+
+    }else if(selectedType.value == 'MUlTIPLE'){
+        const today = moment(val)
+        endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
+    }
+    
+    // console.log("Now StartDate is", startDate.value)
+    // console.log("Now endDate is", endDate.value)
 
     getRevenue(branchSelected.value)
     const result: any = await $fetch('/api/transaction/groupByHour?filter='
@@ -604,23 +632,58 @@ async function onUpdate(val: any) {
     revenueData.value = result.data.revenue
 }
 
-async function onStartDate(value: any, reason: any, details: any) {
+async function onUpdateEndDate(value:any){
+    console.log("onUpdateEndDate value: ",value)
     dateClosePopup.value = true
-    if (toggleSW.value !== 'range') {
-        endDate.value = startDate.value
 
-        // startDate.value = moment.tz(String(startBy), "Asia/Bangkok").toISOString()
-        // endDate = today.clone().endOf('day').toISOString() 
-        const today = moment(endDate.value)
-        endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
-
-        // endDate.value = moment.tz(String(startDate.value), "Asia/Bangkok").toISOString()
-        console.log("endDate Now", endDate.value)
-    }
+    // if(selectedType.value == 'MULTIPLE'){
+    //     const today = moment(value)
+    //     endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
+    //     // console.log("New Date is", endDate.value)      
+    // }
 
     if (startDay && endDay) {
         totalDay.value = endDay.value - startDay.value
+        // console.log("onStartDate->TotalDay: ", totalDay)
+    }
 
+    // console.log("startDate now",startDate.value)
+    // console.log("endDate now ",endDate.value)
+    getRevenue(branchSelected.value)
+    const result: any = await $fetch('/api/transaction/groupByHour?filter='
+        + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
+
+    // console.log("series data1", result.data.revenue)
+    revenueData.value = result.data.revenue    
+}
+
+async function onUpdateBranch(branch:any){
+    getRevenue(branchSelected.value)
+    const result: any = await $fetch('/api/transaction/groupByHour?filter='
+        + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
+
+    // console.log("series data1", result.data.revenue)
+    revenueData.value = result.data.revenue
+}
+
+async function onStartDate(value: any, reason: any, details: any) {
+    console.log("Passing Date value: ",value)
+    dateClosePopup.value = true
+
+    if(selectedType.value == 'MULTIPLE'){
+        const today = moment(value)
+        endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
+        // console.log("New Date is", endDate.value)      
+    }
+
+    // if (toggleSW.value !== 'range') {
+    //     const today = moment(value)
+    //     endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
+    //     // console.log("New Date is", endDate.value)
+    // }
+
+    if (startDay && endDay) {
+        totalDay.value = endDay.value - startDay.value
         // console.log("onStartDate->TotalDay: ", totalDay)
     }
 

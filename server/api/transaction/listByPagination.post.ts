@@ -121,6 +121,7 @@ export default defineEventHandler( async(event) => {
                 amount:true,
                 status:true,
                 jobState:true,
+                paymentBy:true,
                 createdAt:true,
                 updatedAt:true,
                 device:{

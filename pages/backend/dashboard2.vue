@@ -1,4 +1,16 @@
 <template>
+    <div style="width:250px">
+        <DataSelector
+           v-model:startDate ="startDate"
+           v-model:endDate="endDate" 
+           @update:startDate="onUpdateStartDate"
+           @update:endDate="onUpdateEndDate"
+        />
+    </div>
+
+    <div>Start Date: {{ startDate }}</div>
+    <div>End Date: {{ endDate }}</div>
+    
     <div id="q-app" style="min-height: 100vh;">
         <div class="row full-width justify-center q-mt-md">
             <div class="col-md-6 col-sm-12 col-xs-12 column items-center">
@@ -37,6 +49,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+    const startDate = ref("2024-09-21 00:00:00")
+    const endDate = ref("2024-09-21 23:00:00")
 
+    async function onUpdateStartDate(val){
+        console.log("onStart: ",val)
+    }
+    async function onUpdateEndDate(val){
+        console.log("onEnd: ",val)
+    }
 </script>
