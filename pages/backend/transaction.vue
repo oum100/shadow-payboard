@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-md">
         <div class="row">
-            <div class="q-pa-md col-xs-12 col-sm-4 col-md-3">
+            <div class="q-pa-md col-12 col-md-4">
                 <q-card style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         <div class="row">
@@ -46,7 +46,7 @@
                     </q-card-section>
                 </q-card>
             </div>
-            <div class="q-pa-md col-xs-12 col-sm-4 col-md-3">
+            <div class="q-pa-md col-12 col-md-4">
                 <q-card style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)" class="text-white">
                     <q-card-section>
                         <div class="row">
