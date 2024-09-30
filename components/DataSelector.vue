@@ -74,7 +74,7 @@
     }
 
     async function onUpdateEndDate(val: any){
-        console.log("Set End Date: ",val)
+        // console.log("Set End Date: ",val)
         endDate.value = val
     }
 

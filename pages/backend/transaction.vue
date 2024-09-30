@@ -169,7 +169,8 @@
                         </div>
 
                         <div class="col col-12 col-md-2 mt-mobile" >
-                            <q-input filled dense v-model="startDate" label="Start Date">
+                            <DatePicker label="Start Date" v-model:selectedDate=startDate :time=true :range=false @updated="onStartDate"  />
+                            <!-- <q-input filled dense v-model="startDate" label="Start Date">
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -185,7 +186,8 @@
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-time v-model="startDate" mask="YYYY-MM-DD HH:mm" format24h
-                                                @update:model-value="onStartDate">
+                                                @update:model-value="onStartDate"
+                                            >
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
@@ -193,16 +195,18 @@
                                         </q-popup-proxy>
                                     </q-icon>
                                 </template>
-                            </q-input>
+                            </q-input> -->
                         </div>
 
                         <div class="col col-12 col-md-2 mt-mobile" >
-                            <q-input filled dense v-model="endDate" label="End Date">
+                            <DatePicker label="End Date" v-model:selectedDate=endDate :time=true :range="false" @updated="onEndDate"  />
+                            <!-- <q-input filled dense v-model="endDate" label="End Date">
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
-                                                @update:model-value="onEndDate">
+                                                @update:model-value="onEndDate"
+                                            >
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
@@ -212,7 +216,8 @@
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-time v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
-                                                @update:model-value="onEndDate">
+                                                @update:model-value="onEndDate"
+                                            >
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
@@ -220,10 +225,10 @@
                                         </q-popup-proxy>
                                     </q-icon>
                                 </template>
-                            </q-input>
+                            </q-input> -->
                         </div>
 
-                        <div class="column col q-mx-md mt-mobile items-center">
+                        <div class="col mt-mobile">
                             <q-btn icon="restart_alt" title="Set filter to default" @click="resetFilter">Reset
                                 Filter</q-btn>
                         </div>
@@ -308,6 +313,7 @@ const selected = ref([])
 let branchSelected = ref('ALL')
 let listBranchOption = ref(['ALL'])
 let vClosePopup = ref(false)
+const dateClosePopup = ref(false)
 
 const pagination = ref({
     sortBy: 'desc',
@@ -444,11 +450,11 @@ async function onRequest(props: any) {
     // const paymentRevenue: any = await getPaymentRevenue(branchSelected.value)
     // console.log("paymentRevenue: ", paymentRevenue)
 
-    counterQR.value = totalResult.total.countQR._count
-    counterCash.value = totalResult.total.countCash._count
+    counterQR.value = new Intl.NumberFormat('en-US').format(totalResult.total.countQR._count)
+    counterCash.value = new Intl.NumberFormat('en-US').format(totalResult.total.countCash._count)
 
-    revenueQR.value = totalResult.total.countQR._sum.amount
-    revenueCash.value = totalResult.total.countCash._sum.amount
+    revenueQR.value = new Intl.NumberFormat('en-US').format(totalResult.total.countQR._sum.amount)
+    revenueCash.value = new Intl.NumberFormat('en-US').format(totalResult.total.countCash._sum.amount)
 
 
 
@@ -614,20 +620,29 @@ async function resetFilter() {
     tableRef.value.requestServerInteraction()
 }
 
-function onStartDate(value: any, reason: any, details: any) {
-    if (startDay && endDay) {
-        totalDay.value = endDay.value - startDay.value
-        tableRef.value.requestServerInteraction()
-        console.log("onStartDate->TotalDay: ", totalDay)
-    } 
+async function onStartDate(value: any) {
+    console.log("onStartDate->val: ",value)
+    startDate.value = value
+    totalDay.value = endDay.value - startDay.value
+    tableRef.value.requestServerInteraction()
+
+    // if (startDay && endDay) {
+    //     totalDay.value = endDay.value - startDay.value
+    //     tableRef.value.requestServerInteraction()
+    //     console.log("onStartDate->TotalDay: ", totalDay)
+    // } 
 }
 
-function onEndDate(value: any, reason: any, details: any) {
-    if (startDay && endDay) {
-        totalDay.value = endDay.value - startDay.value
-        tableRef.value.requestServerInteraction()
-        console.log("onEndDate->TotalDay: ", totalDay)
-    }
+async function onEndDate(value: any) {
+    console.log("onEndDate->val: ",value)
+    endDate.value = value
+    totalDay.value = endDay.value - startDay.value
+    tableRef.value.requestServerInteraction()
+    // if (startDay && endDay) {
+    //     totalDay.value = endDay.value - startDay.value
+    //     tableRef.value.requestServerInteraction()
+    //     console.log("onEndDate->TotalDay: ", totalDay)
+    // }
 }
 
 

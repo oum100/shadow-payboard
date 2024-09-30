@@ -1,5 +1,5 @@
 <template>
-    <div class="q-my-sm">
+    <div >
         <q-input filled dense v-model="selectedDate" :label=props.label>
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -47,7 +47,7 @@
     const dateClosePopup = ref(false)
 
     watch(selectedDate, (val) => {
-        console.log("child selectedDate",val)
+        // console.log("child selectedDate",val)
         dateClosePopup.value = true
         emit('updated', val)
     })
