@@ -136,7 +136,7 @@
             </div> -->
         </div>
         <!-- @ts-expect-error -->
-        <q-responsive :ratio="16 / 9">
+        <!-- <q-responsive :ratio="16 / 9"> -->
             <q-table class="my-sticky-dynamic" flat bordered ref="tableRef" title="Transactions" :rows="rows"
                 :columns="columns" row-key="index" selection="multiple" virtual-scroll :virtual-scroll-item-size="48"
                 :virtual-scroll-sticky-size-start="48" :rows-per-page-options="[10, 20, 30, 50, 100]"
@@ -157,89 +157,77 @@
 
 
                 <template #top>
-                    <div class="col-3 text-h4 text-blue">{{ branchSelected }} transactions </div>
-                    <q-space />
-                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:210px">
-                        <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
-                            style="width: 200px" @update:model-value="showTrans()" />
+                    <div class="row q-gutter-md" style="width:100%">
+                        <div class="column col col-12 col-md-3 text-h4 text-blue">
+                            {{ branchSelected }} Transactions 
+                        </div>
+                        <q-space />
+                        <div class="col col-12 col-md-2" >
+                            <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
+                                @update:model-value="showTrans()" 
+                            />
+                        </div>
+
+                        <div class="col col-12 col-md-2 mt-mobile" >
+                            <q-input filled dense v-model="startDate" label="Start Date">
+                                <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="startDate" mask="YYYY-MM-DD HH:mm" format24h
+                                                @update:model-value="onStartDate"
+                                            >
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                    <q-icon name="access_time" class="cursor-pointer">
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-time v-model="startDate" mask="YYYY-MM-DD HH:mm" format24h
+                                                @update:model-value="onStartDate">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                </div>
+                                            </q-time>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                            </q-input>
+                        </div>
+
+                        <div class="col col-12 col-md-2 mt-mobile" >
+                            <q-input filled dense v-model="endDate" label="End Date">
+                                <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
+                                                @update:model-value="onEndDate">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                    <q-icon name="access_time" class="cursor-pointer">
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-time v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
+                                                @update:model-value="onEndDate">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                </div>
+                                            </q-time>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                            </q-input>
+                        </div>
+
+                        <div class="column col q-mx-md mt-mobile items-center">
+                            <q-btn icon="restart_alt" title="Set filter to default" @click="resetFilter">Reset
+                                Filter</q-btn>
+                        </div>
                     </div>
-
-                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:220px">
-                        <q-input filled dense v-model="startDate" label="Start Date">
-                            <template v-slot:prepend>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="startDate" mask="YYYY-MM-DD HH:mm" format24h
-                                            @update:model-value="onStartDate"
-                                        >
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-
-                            <template v-slot:append>
-                                <q-icon name="access_time" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-time v-model="startDate" mask="YYYY-MM-DD HH:mm" format24h
-                                            @update:model-value="onStartDate">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-time>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                    </div>
-
-                    <div class="q-mx-md q-guttar-md" style="max-width: 250px; width:220px">
-                        <q-input filled dense v-model="endDate" label="End Date">
-                            <template v-slot:prepend>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
-                                            @update:model-value="onEndDate">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-
-                            <template v-slot:append>
-                                <q-icon name="access_time" class="cursor-pointer">
-                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                        <q-time v-model="endDate" mask="YYYY-MM-DD HH:mm" format24h
-                                            @update:model-value="onEndDate">
-                                            <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-time>
-                                    </q-popup-proxy>
-                                </q-icon>
-                            </template>
-                        </q-input>
-                    </div>
-
-                    <div class="q-mx-md q-guttar-md" style="max-width: 230px">
-                        <q-btn icon="restart_alt" title="Set filter to default" @click="resetFilter">Reset
-                            Filter</q-btn>
-                    </div>
-
-                    <!-- <q-space />
-
-                <div class="q-mx-md q-guttar-md" style="max-width: 200px">
-                    <q-input filled dense debounce="300" v-model="filter" placeholder="Search">
-                        <template v-slot:append>
-                            <q-icon name="search" />
-                        </template>
-                    </q-input>
-                </div> -->
-
                 </template>
 
                 <!-- Customized field "Branch" -->
@@ -301,11 +289,11 @@
 
 
             </q-table>
-        </q-responsive>
+        <!-- </q-responsive> -->
 
-        <div class="q-mt-md">
+        <!-- <div class="q-mt-md">
             Selected: {{ JSON.stringify(selected) }}
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -647,41 +635,57 @@ function onEndDate(value: any, reason: any, details: any) {
 </script>
 
 <style lang="scss" scoped>
-.my-sticky-dynamic {
-    height: 650px;
+    .my-sticky-dynamic {
+        height: 650px;
 
-    .q-table__top,
-    .q-table__bottom {
+        .q-table__top,
+        .q-table__bottom {
 
-        thead,
-        tr:first-child,
-        th {
-            /* bg color is important for th; just specify one */
-            background-color: #cccccc
-        }
+            thead,
+            tr:first-child,
+            th {
+                /* bg color is important for th; just specify one */
+                background-color: #cccccc
+            }
 
-        thead,
-        tr,
-        th {
-            position: sticky;
-            z-index: 1;
-        }
+            thead,
+            tr,
+            th {
+                position: sticky;
+                z-index: 1;
+            }
 
-        thead,
-        tr:last-child,
-        th {
-            top: 48px;
-        }
+            thead,
+            tr:last-child,
+            th {
+                top: 48px;
+            }
 
-        thead,
-        tr:first-child,
-        th {
-            top: 0;
-        }
+            thead,
+            tr:first-child,
+            th {
+                top: 0;
+            }
 
-        tbody {
-            scroll-margin-top: 48px;
+            tbody {
+                scroll-margin-top: 48px;
+            }
         }
     }
-}
+
+    @media (max-width: 768px) {
+        .font-mobile{
+            font-size: 25px;
+        }
+
+        .mt-mobile{
+            margin-top: 0.5rem;
+        }
+
+        .mb-mobile{
+            margin-bottom: 0.5rem;
+        }
+    }
+    
 </style>
+

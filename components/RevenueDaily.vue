@@ -131,11 +131,19 @@
                         </div>
 
                         <div v-else-if="toggleSW == 'monthly'" class="q-mt-md q-gutter-md">
-                            <q-select filled dense v-model="selectedMonth" :options="optionsMonth">
+                            <!-- <q-select filled dense v-model="selectedMonth" :options="optionsMonth">
                                 <template v-slot:prepend>
                                     <q-icon name="event" />
                                 </template>
-                            </q-select>
+                            </q-select> -->
+
+                            <MonthPicker
+                                label = 'Week Of'
+                                :year = true 
+                                :range = false
+                                v-model:selectedData = weekOf
+                            />
+
                         </div>
 
                         <div v-else-if="toggleSW == 'yearly'" class="q-mt-md q-gutter-md">
@@ -227,12 +235,14 @@
 <script setup lang="ts">
 import { date } from 'quasar'
 import moment from "moment-timezone";
+import MonthPicker from './MonthPicker.vue';
 
 
 let toggleSW = ref('daily')
 const selectedWeek = ref({ "label": "Week1", "value": "W1" })
 const selectedMonth = ref({ "label": "August", "value": "AUG" })
 const selectedYear = ref('2024')
+
 const startDate = ref()
 const startDay = ref()
 const endDate = ref()
@@ -304,6 +314,15 @@ const optionsMonth = ref([
 
 const today = moment(String(new Date(Date.now()))).tz("Asia/Bangkok")
 console.log("Today: ", today)
+
+
+const weekOf = today.format("DD MMM YY")
+const weekStart = today.clone().startOf('week').format("YYYY-MM-DD HH:mm:ss") 
+const weekEnd = today.clone().endOf('week').format("YYYY-MM-DD HH:mm:ss") 
+
+
+console.log("weekStart: ",weekStart)
+console.log("weekEnd: ",weekEnd)
 
 !startDate.value ? startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss") : console.log("Start Date: ", startDate.value)
 console.log("Start Date: ", startDate.value)
@@ -636,12 +655,6 @@ async function onUpdateEndDate(value:any){
     console.log("onUpdateEndDate value: ",value)
     dateClosePopup.value = true
 
-    // if(selectedType.value == 'MULTIPLE'){
-    //     const today = moment(value)
-    //     endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
-    //     // console.log("New Date is", endDate.value)      
-    // }
-
     if (startDay && endDay) {
         totalDay.value = endDay.value - startDay.value
         // console.log("onStartDate->TotalDay: ", totalDay)
@@ -796,4 +809,5 @@ async function getRowsNumberCount(filter: any): Promise<any> {
         margin-top: 37rem;
     }
 }
+
 </style>

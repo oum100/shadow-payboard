@@ -33,9 +33,6 @@ async function aggregateForEachHourInDay(
   shop: any,
   sDate: any,
   eDate: any
-  // year: number,
-  // month: number,
-  // day: number
 ) {
 
   let startDate: string | undefined;
@@ -84,10 +81,6 @@ async function aggregateForEachHourInDay(
   });
 
   // console.log("Raw Trans",trans)
-  
-
-  
-
   const wholeRange = {
     // date:moment.tz(new Date(year, month - 1, day, 0,0,0), "Asia/Bangkok").format("YYYY-MM-DD"),
     revenue:{
@@ -173,7 +166,9 @@ async function aggregateForEachHourInDay(
             break
     }
 
-    
+    switch(transaction.device.branch?.branchName){
+      
+    }
 
     return acc;
   }, {} as Record<string, { 
