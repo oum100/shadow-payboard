@@ -512,7 +512,7 @@ async function onRequest(props: any) {
 
         // Set DateTime format
         row.createdAt = new Intl.DateTimeFormat('en-GB', {
-            dateStyle: 'short',
+            dateStyle: 'medium',
             timeStyle: 'medium',
             timeZone: 'Asia/Bangkok',
         }).format(new Date(row.createdAt))

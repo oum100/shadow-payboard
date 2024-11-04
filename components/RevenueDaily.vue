@@ -1,156 +1,164 @@
 <template>
     <div class="q-pa-md">
         <div class="row q-mt-sm items-start" style="height:300px;">
-        <div id="ShowRevenueNumber" class="col-12 col-md-3 show-revenue-number">
-            <div class="col q-px-md">
-                <q-card class="text-white"
-                    style="background: radial-gradient(circle, #787777 20%,#403e3f 80%); height:150px">
-                    <q-card-section>
-                        <div class="row q-pa-sm">
-                            <div class="col-6 q-px-md">
-                                <div class="text-center"><q-icon name="account_balance" size="40px"></q-icon></div>
-                                <div class="text-subtitle1 text-center">Revenue</div>
-                                <div class="text-h4 text-center">{{ revenueTotal }}</div>
-                            </div>
-
-                            <div class="column col-6">
-                                <div class="row items-center" style="height: 50px;">
-                                    <q-tooltip>QR Revenue</q-tooltip>
-                                    <div class="col-6 column items-center">
-                                        <q-icon name="qr_code_2" size="md"></q-icon>
-                                    </div>
-                                    <div class="col-6 column items-center">
-                                        <div class="text-h6">{{ revenueQR }}</div>
-                                    </div>
+            <div id="ShowRevenueNumber" class="col-12 col-md-3 show-revenue-number">
+                <div class="col q-px-md">
+                    <q-card class="text-white"
+                        style="background: radial-gradient(circle, #787777 20%,#403e3f 80%); height:150px">
+                        <q-card-section>
+                            <div class="row q-pa-sm">
+                                <div class="col-6 q-px-md">
+                                    <div class="text-center"><q-icon name="account_balance" size="40px"></q-icon></div>
+                                    <div class="text-subtitle1 text-center">Revenue</div>
+                                    <div class="text-h4 text-center">{{ revenueTotal }}</div>
                                 </div>
-                                <q-separator color="white" size="2px" inset />
-                                <div class="row items-center" style="height: 50px;">
-                                    <q-tooltip>Cash Revenue</q-tooltip>
-                                    <div class="col-6 column items-center">
-                                        <q-icon name="paid" size="md"></q-icon>
-                                    </div>
-                                    <div class="col-6 column items-center">
-                                        <div class="text-h6">{{ revenueCash }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                    </q-card-section>
-                </q-card>
-            </div>
-            <div class="col q-mt-sm q-px-md">
-                <q-card class="text-white"
-                    style="background: radial-gradient(circle, #35a2ff 20%, #014a88 100%); height:150px">
-                    <q-card-section>
-                        <div class="row q-pa-sm">
-                            <div class="col-6 q-px-md">
-                                <div class="text-center"><q-icon name="receipt_long" size="40px"></q-icon></div>
-                                <div class="text-subtitle1 text-center">Transactions</div>
-                                <div class="text-h4 text-center">{{ transTotal }}</div>
-                            </div>
-
-                            <div class="column col-6" style="border:1px dashed">
-                                <div class="row items-center" style="height: 50px;">
-                                    <q-tooltip>QR Transaction</q-tooltip>
-                                    <div class="col-6 column items-center">
-                                        <q-icon name="qr_code_2" size="md"></q-icon>
+                                <div class="column col-6">
+                                    <div class="row items-center" style="height: 50px;">
+                                        <q-tooltip>QR Revenue</q-tooltip>
+                                        <div class="col-6 column items-center">
+                                            <q-icon name="qr_code_2" size="md"></q-icon>
+                                        </div>
+                                        <div class="col-6 column items-center">
+                                            <div class="text-h6">{{ revenueQR }}</div>
+                                        </div>
                                     </div>
-                                    <div class="col-6 column items-center">
-                                        <div class="text-h6">{{ counterQR }}</div>
-                                    </div>
-                                </div>
-                                <q-separator color="white" size="2px" inset />
-                                <div class="row items-center" style="height: 50px;">
-                                    <q-tooltip>Cash Transaction</q-tooltip>
-                                    <div class="col-6 column items-center">
-                                        <q-icon name="paid" size="md"></q-icon>
-                                    </div>
-                                    <div class="col-6 column items-center">
-                                        <div class="text-h6">{{ counterCash }}</div>
+                                    <q-separator color="white" size="2px" inset />
+                                    <div class="row items-center" style="height: 50px;">
+                                        <q-tooltip>Cash Revenue</q-tooltip>
+                                        <div class="col-6 column items-center">
+                                            <q-icon name="paid" size="md"></q-icon>
+                                        </div>
+                                        <div class="col-6 column items-center">
+                                            <div class="text-h6">{{ revenueCash }}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                    </q-card-section>
-                </q-card>
-            </div>
-        </div>
-
-        <div id="MiddleChart" class="col-12 col-md-6 machine-chart">
-            <div class="q-px-md">
-                <q-card style="height:310px">
-                    <q-card-section class="q-py-sm">
-                        <div class="text-h6">Revenue by machine type</div>
-                        <ClientOnly>
-                            <apexchart type="bar" height="250" :options="chartOptionsByType" :series=seriesRevenue>
-                            </apexchart>
-                        </ClientOnly>
-                    </q-card-section>
-                </q-card>
-            </div>
-        </div>
-
-        <div id="SelectDate" class="col-12 col-md-3 items-center select-date" style="height:350px;">
-            <div class="column items-center">
-                <div class="col">
-                    <div class="q-mb-md">
-                        <div class="column col-12 col-md-4 q-pr-sm items-end">
-                            <q-btn-toggle v-model="toggleSW" color="blue-6" text-color="white" toggle-color="blue-8"
-                                toggle-text-color="white" rounded unelevated glossy size="0.72rem" :options="btnOptions" />
-                        </div>
-                    </div>
+                        </q-card-section>
+                    </q-card>
                 </div>
+                <div class="col q-mt-sm q-px-md">
+                    <q-card class="text-white"
+                        style="background: radial-gradient(circle, #35a2ff 20%, #014a88 100%); height:150px">
+                        <q-card-section>
+                            <div class="row q-pa-sm">
+                                <div class="col-6 q-px-md">
+                                    <div class="text-center"><q-icon name="receipt_long" size="40px"></q-icon></div>
+                                    <div class="text-subtitle1 text-center">Transactions</div>
+                                    <div class="text-h4 text-center">{{ transTotal }}</div>
+                                </div>
 
-                <div class="col">
-                    <div class="q-guttar-md col-xs-12 col-md-6">
-                        <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
-                            style="width:250px" @update:model-value="onUpdateBranch" />
+                                <div class="column col-6" style="border:1px dashed">
+                                    <div class="row items-center" style="height: 50px;">
+                                        <q-tooltip>QR Transaction</q-tooltip>
+                                        <div class="col-6 column items-center">
+                                            <q-icon name="qr_code_2" size="md"></q-icon>
+                                        </div>
+                                        <div class="col-6 column items-center">
+                                            <div class="text-h6">{{ counterQR }}</div>
+                                        </div>
+                                    </div>
+                                    <q-separator color="white" size="2px" inset />
+                                    <div class="row items-center" style="height: 50px;">
+                                        <q-tooltip>Cash Transaction</q-tooltip>
+                                        <div class="col-6 column items-center">
+                                            <q-icon name="paid" size="md"></q-icon>
+                                        </div>
+                                        <div class="col-6 column items-center">
+                                            <div class="text-h6">{{ counterCash }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                </div>
+            </div>
 
-                        <div v-if="toggleSW == 'daily'" class="q-mt-md q-gutter-md">
-                            <div class="q-mb-md col-xs-12 col-md-6" style="max-width: 250px;">
-                                <!-- <DatePicker v-model:selectedDate="startDate" :time="false" @updated="onUpdate" label="Daily Of"/> -->
-                                <DataSelector
-                                    v-model:startDate=startDate
-                                    v-model:endDate=endDate
-                                    v-model:selectedType=selectedType
-                                    @update:startDate="onUpdateStartDate"
-                                    @update:endDate="onUpdateEndDate"
-                                    @update:selectedType="onUpdateSelectType"
+            <div id="MiddleChart" class="col-12 col-md-6 machine-chart">
+                <div class="q-px-md">
+                    <q-card style="height:310px">
+                        <q-card-section v-if="toggleSW == 'daily'" class="q-py-sm">
+                            <div class="text-h6">Revenue by machine type</div>
+                            <ClientOnly>
+                                <apexchart type="bar" height="250" :options="chartOptionsByType" :series=seriesRevenue />
+                            </ClientOnly>
+                        </q-card-section>
+                    </q-card>
+                </div>
+            </div>
+
+            <div id="SelectDate" class="col-12 col-md-3 items-center select-date" style="height:350px;">
+                <div class="column items-center">
+                    <div class="col">
+                        <div class="q-mb-md">
+                            <div class="column col-12 col-md-4 q-pr-sm items-end">
+                                <q-btn-toggle v-model="toggleSW" color="blue-6" text-color="white" toggle-color="blue-8"
+                                    toggle-text-color="white" rounded unelevated glossy size="0.72rem"
+                                    :options="btnOptions" 
+                                    @click = "onUpdateToggle"
                                 />
                             </div>
                         </div>
+                    </div>
 
-                        <div v-else-if="toggleSW == 'weekly'" class="q-mt-md q-gutter-md">
-                            <q-select filled dense v-model="selectedWeek" :options="optionsWeek">
+                    <div class="col">
+                        <div class="q-guttar-md col-xs-12 col-md-6">
+                            <q-select filled dense v-model="branchSelected" :options="listBranchOption" label="Branch"
+                                style="width:250px" @update:model-value="onUpdateBranch" />
+
+                            <div v-if="toggleSW == 'daily'" class="q-mt-md q-gutter-md">
+                                <div class="q-mb-md col-xs-12 col-md-6" style="max-width: 250px;">
+                                    <!-- <DatePicker v-model:selectedDate="startDate" :time="false" @updated="onUpdate" label="Daily Of"/> -->
+                                    <DataSelector 
+                                        v-model:startDate=startDate 
+                                        v-model:endDate=endDate
+                                        v-model:selectedType=selectedType 
+                                        v-model:scope=dataScope
+                                        @update:startDate="onUpdateStartDate"
+                                        @update:endDate="onUpdateEndDate" 
+                                    />
+                                </div>
+                            </div>
+
+                            <div v-else-if="toggleSW == 'weekly'" class="q-mt-md q-gutter-md">
+                                <DataSelector 
+                                        v-model:startDate=weekStartDate 
+                                        v-model:endDate=weekEndDate
+                                        v-model:selectedType=selectedType 
+                                        v-model:scope=dataScope
+                                        @update:startDate="onUpdateMonthStartDate"
+                                        @update:endDate="onUpdateMonthEndDate" 
+                                />
+                            </div>
+
+                            <div v-else-if="toggleSW == 'monthly'" class="q-mt-md q-gutter-md">
+                                <DataSelector 
+                                        v-model:startDate=monthStartDate 
+                                        v-model:endDate=monthEndDate
+                                        v-model:selectedType=selectedType 
+                                        v-model:scope=dataScope
+                                        @update:startDate="onUpdateMonthStartDate"
+                                        @update:endDate="onUpdateMonthEndDate" 
+                                />
+                                <!-- <q-select filled dense v-model="selectedMonth" :options="optionsMonth">
                                 <template v-slot:prepend>
                                     <q-icon name="event" />
                                 </template>
-                            </q-select>
-                        </div>
+                                </q-select> -->
 
-                        <div v-else-if="toggleSW == 'monthly'" class="q-mt-md q-gutter-md">
-                            <!-- <q-select filled dense v-model="selectedMonth" :options="optionsMonth">
-                                <template v-slot:prepend>
-                                    <q-icon name="event" />
-                                </template>
-                            </q-select> -->
+                                <!-- <MonthPicker label='Month' :year=true :range=false v-model:selectedData=selectedMonth
+                                    @updated="onUpdateMonth" 
+                                /> -->
 
-                            <MonthPicker
-                                label = 'Week Of'
-                                :year = true 
-                                :range = false
-                                v-model:selectedData = weekOf
-                            />
+                            </div>
 
-                        </div>
+                            <div v-else-if="toggleSW == 'yearly'" class="q-mt-md q-gutter-md">
+                                {{ toggleSW }}
+                            </div>
 
-                        <div v-else-if="toggleSW == 'yearly'" class="q-mt-md q-gutter-md">
-                            {{ toggleSW }}
-                        </div>
-
-                        <!-- <div v-else-if="toggleSW == 'range'" class="q-mt-md q-gutter-md">
+                            <!-- <div v-else-if="toggleSW == 'range'" class="q-mt-md q-gutter-md">
                             <div class="q-mb-md" style="max-width: 250px; width:100%">
                                 <q-input filled dense v-model="startDate" label="Start Date">
                                     <template v-slot:append>
@@ -207,25 +215,38 @@
                             </div>
                         </div> -->
 
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
-        </div>
         <div class="row q-mt-md justify-center revenue-chart">
-            <div class="col-12 col-md-10">
-                <q-card>
-                    <q-card-section>
+            <div v-if="toggleSW == 'daily'" class="col-12 col-md-10">
+                <q-card >
+                    <q-card-section >
                         <ClientOnly>
-                            <apexchart type="area" height="330" width="100%" :options="chartOptions" :series=revenueData>
+                            <apexchart type="area" height="330" width="100%" :options="dailyChartOptions"
+                                :series=revenueData>
+                            </apexchart>
+                        </ClientOnly>
+                    </q-card-section>
+                </q-card>
+
+            </div>
+            <div v-if="toggleSW == 'weekly'" class="col-12 col-md-10">
+                <q-card  >
+                    <q-card-section >
+                        <ClientOnly>
+                            <apexchart type="area" height="330" width="100%" :options="weeklyChartOptions"
+                                :series=testData>
                             </apexchart>
                         </ClientOnly>
                     </q-card-section>
                 </q-card>
             </div>
         </div>
-    </div>  
+    </div>
 </template>
 
 
@@ -240,15 +261,26 @@ import MonthPicker from './MonthPicker.vue';
 
 let toggleSW = ref('daily')
 const selectedWeek = ref({ "label": "Week1", "value": "W1" })
-const selectedMonth = ref({ "label": "August", "value": "AUG" })
+const selectedMonth = ref()
 const selectedYear = ref('2024')
 
 const startDate = ref()
 const startDay = ref()
 const endDate = ref()
-const selectedType = ref('SINGLE')
 const endDay = ref()
+const selectedType = ref('SINGLE')
+const dataScope =  ref('Daily')
 const totalDay = ref()
+
+const weekStartDate = ref()
+const weekEndDate = ref()
+
+const monthStartDate = ref()
+const monthEndDate = ref()
+
+const yearStartDate = ref()
+const yearEndDate = ref()
+
 let branchSelected = ref('ALL')
 let listBranchOption = ref(['ALL'])
 let revenueData = ref()
@@ -311,18 +343,86 @@ const optionsMonth = ref([
     { label: 'December', value: 'DEC' },
 ])
 
+const xCategories = ref([
+    '2024-10-13, Sun',
+    '2024-10-14, Mon',
+    '2024-10-15, Tue',
+    '2024-10-16, Wed',
+    '2024-10-17, Thr',
+    '2024-10-18, Fri',
+    '2024-10-19, Sat',
+])
+const testData = [
+   {
+    name:'Total',
+    type:'area',
+    data: [1500,1260,1400,1380,1999,2520,1490]
+    // data: [
+    //     {x:'2024-10-13',y:1500},
+    //     {x:'2024-10-14',y:1260},
+    //     {x:'2024-10-15',y:1400},
+    //     {x:'2024-10-16',y:1380},
+    //     {x:'2024-10-17',y:1999},
+    //     {x:'2024-10-18',y:2520},
+    //     {x:'2024-10-19',y:1490}
+    // ]
+   },
+   {
+    name:'Washer',
+    type:'bar',
+    data: [900,860,1000,1080,1500,2120,1100]
+   },
+   {
+    name:'Dryer',
+    type:'bar',
+    data: [600,400,400,300,499,400,390]
+   },
+   {
+    name:'SkyView',
+    type:'area',
+    data: [1140,900,1200,1100,1600,2400,1000]
+   },
+   {
+    name:'RGB-18',
+    type:'area',
+    data: [360,360,200,280,399,120,490]
+   }
+]
 
-const today = moment(String(new Date(Date.now()))).tz("Asia/Bangkok")
-console.log("Today: ", today)
+const testData2 = [
+    {
+        name:'Total',
+        type:'area',
+        data:[
+            { x: '2024-10-13', y: 1500 },
+            { x: '2024-10-14', y: 1260 },
+            { x: '2024-10-15', y: 1400 },
+            { x: '2024-10-16', y: 1380 },
+            { x: '2024-10-17', y: 1999 },
+            { x: '2024-10-18', y: 2520 },
+            { x: '2024-10-19', y: 1490 },
+            
+        ]
+    }
+]
+
+let today = moment().tz("Asia/Bangkok")
+console.log("Global Today variable: ", today)
+
+selectedMonth.value = today.format("MMMM YYYY")
+monthStartDate.value = today.clone().startOf('month').format("YYYY-MM-DD HH:mm:ss")
+monthEndDate.value = today.clone().endOf('month').format("YYYY-MM-DD HH:mm:ss")
+console.log("monthStartDate->Initial:",monthStartDate.value)
+console.log("monthEndDate-Initial:",monthEndDate.value)
+
+// weekStartDate.value = today.clone().startOf('week').format("YYYY-MM-DD HH:mm:ss")
+weekStartDate.value = startDate.value
+weekEndDate.value = today.clone().endOf('week').format("YYYY-MM-DD HH:mm:ss")
+console.log("weekStartDate->Initial: ", weekStartDate.value)
+console.log("WeekStartDate->Initial-WeekOfYear: ",today.clone().startOf('week').format("ww"))
+console.log("weekEndDate->Initial: ", weekEndDate.value)
 
 
-const weekOf = today.format("DD MMM YY")
-const weekStart = today.clone().startOf('week').format("YYYY-MM-DD HH:mm:ss") 
-const weekEnd = today.clone().endOf('week').format("YYYY-MM-DD HH:mm:ss") 
-
-
-console.log("weekStart: ",weekStart)
-console.log("weekEnd: ",weekEnd)
 
 !startDate.value ? startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss") : console.log("Start Date: ", startDate.value)
 console.log("Start Date: ", startDate.value)
@@ -381,7 +481,7 @@ const chartOptionsByType = ref({
     }
 })
 
-const chartOptions = ref({
+const dailyChartOptions = ref({
     chart: {
         id: 'Revenuedaily',
         height: 350,
@@ -404,7 +504,7 @@ const chartOptions = ref({
         horizontalAlign: 'left'
     },
     title: {
-        text: 'Daily Revenue'
+        text: 'Total Revenue'
     },
     plotOptions: {
         bar: {
@@ -480,6 +580,147 @@ const chartOptions = ref({
 
 })
 
+const xlabel = ref(['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003', '07/01/2003',
+          
+        ])
+
+const weeklyChartOptions = ref({
+    chart: {
+        id: 'Revenuedaily',
+        height: 350,
+        type: 'area',
+        toolbar: {
+            show: false,
+        },
+    },
+
+    dataLabels: {
+        enabled: false, // Disable data labels
+    },
+    stroke: {
+        width: [4, 2, 2, 2, 2],
+        // colors: ['transparent']
+    },
+    legend: {
+        show: true,
+        position: 'top',
+        horizontalAlign: 'left'
+    },
+    title: {
+        text: 'Total Revenue'
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            columnWidth: '40%',
+            // endingShape: 'rounded'
+        },
+    },
+    responsive: [
+        {
+            breakpoint: 1024,
+            options: {
+                chart: {
+                    width: '100%',
+                },
+                legend: {
+                    position: 'bottom',
+                },
+            },
+        },
+        {
+            breakpoint: 768,
+            options: {
+                chart: {
+                    width: '90%',
+                },
+                legend: {
+                    position: 'bottom',
+                },
+            },
+        },
+        {
+            breakpoint: 600,
+            options: {
+                chart: {
+                    width: '100%',
+                },
+                legend: {
+                    position: 'bottom',
+                },
+            },
+        },
+    ],
+    yaxis: {
+        stepSize: 500,
+        title: {
+            text: 'Amount (Baht)',
+        },
+    },
+    xaxis: {
+        // type: 'category',
+        // type: 'datetime',
+        // categories: [
+        // '2024-10-13 (Sunday)',
+        // '2024-10-14 (Monday)',
+        // '2024-10-15 (Tuesday)',
+        // '2024-10-16 (Wednesday)',
+        // '2024-10-17 (Thursday)',
+        // '2024-10-18 (Friday)',
+        // '2024-10-19 (Saturday)',
+        // ],
+        // tickAmount: 7,
+        categories: xCategories,
+        title: {
+            text: 'Day',
+            style: {
+              color: undefined,
+              fontSize: '14px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 600,
+              cssClass: 'apexcharts-xaxis-title',
+          },
+        },
+        
+        // labels:{
+        //     show: true,
+        //     format: 'dddd', // Format for the date
+        //     datetimeFormatter: {
+        //         weekday: 'ddd', // Day of the week format
+        //     },
+        // },  
+    },
+    colors: ['#959a9c', '#005eff', '#00ffd9', '#fa64f2', '#f5473b'],
+    crosshairs:{
+        stroke: {
+            curve: 'smooth',
+        },
+    },
+
+    markers: {
+        size: 5
+    },
+    // labels: xlabel,
+    fill: {
+        type: 'gradient',
+        gradient: {
+            shade: 'light',
+            type: 'vertical',
+            shadeIntensity: 0.8,
+            gradientToColors: undefined, // Optional: Customize gradient
+            inverseColors: true,
+            opacityFrom: 0.8,
+            opacityTo: 0.7,
+            stops: [0, 90, 100],
+        },
+    },
+    tooltip:{
+        enabled: true,
+        x: {
+            format: 'dd MMM yyyy, ddd', // Tooltip format for date and day of the week
+        },
+    }
+})
 
 const totalResult = await getRowsNumberCount(branchSelected.value)
 // console.log("totalResult: ", totalResult)
@@ -613,35 +854,28 @@ async function fetchData(filter: string, startDate: string, endDate: string) {
     }
 }
 
-async function onUpdateSelectType(val:any){
-    // console.log("onUpdateSelectType: ",val)
-    // switch(val){
-    //     case 'SINGLE':
-            
-    //     break
-    //     case 'MULTIPLE':
-            
-    //     break
-    // }
+async function onUpdateSelectType(val: any) {
+
 }
 
 async function onUpdateStartDate(val: any) {
-    console.log("onUpdate val: ",val)
-
-    if(selectedType.value == 'SINGLE'){
-        const today = moment(val)
+    console.log("onUpdateStartDate val: ", val)
+    console.log("onUpdateStartDate->startDate now",startDate.value)
+    console.log("onUpdateStartDate->endDate now ",endDate.value)
+    if (selectedType.value == 'SINGLE') {
+        console.log("onUpdateStartDate->Perform Single")
+        today = moment(val)
         // console.log("Start Date Now: ", startDate.value)
-        
+
         startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss")
         endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
 
-    }else if(selectedType.value == 'MUlTIPLE'){
-        const today = moment(val)
-        endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
+    } else if (selectedType.value == 'RANGE') {
+        console.log("onUpdateStartDate->Perform Multiple")
+        today = moment(val)
+        startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss")
+        // endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
     }
-    
-    // console.log("Now StartDate is", startDate.value)
-    // console.log("Now endDate is", endDate.value)
 
     getRevenue(branchSelected.value)
     const result: any = await $fetch('/api/transaction/groupByHour?filter='
@@ -651,26 +885,40 @@ async function onUpdateStartDate(val: any) {
     revenueData.value = result.data.revenue
 }
 
-async function onUpdateEndDate(value:any){
-    console.log("onUpdateEndDate value: ",value)
+async function onUpdateEndDate(val: any) {
+    console.log("onUpdateEndDate->val: ", val)
+    console.log("onUpdateEndDate->startDate now",startDate.value)
+    console.log("onUpdateEndDate->endDate now ",endDate.value)
     dateClosePopup.value = true
+
+    today = moment(val)
+    endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
 
     if (startDay && endDay) {
         totalDay.value = endDay.value - startDay.value
         // console.log("onStartDate->TotalDay: ", totalDay)
     }
 
-    // console.log("startDate now",startDate.value)
-    // console.log("endDate now ",endDate.value)
+
     getRevenue(branchSelected.value)
     const result: any = await $fetch('/api/transaction/groupByHour?filter='
         + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
 
     // console.log("series data1", result.data.revenue)
-    revenueData.value = result.data.revenue    
+    revenueData.value = result.data.revenue
 }
 
-async function onUpdateBranch(branch:any){
+async function onUpdateMonthStartDate(value:any){
+
+}
+
+async function onUpdateMonthEndDate(value:any){
+
+}
+
+
+
+async function onUpdateBranch(branch: any) {
     getRevenue(branchSelected.value)
     const result: any = await $fetch('/api/transaction/groupByHour?filter='
         + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
@@ -680,17 +928,17 @@ async function onUpdateBranch(branch:any){
 }
 
 async function onStartDate(value: any, reason: any, details: any) {
-    console.log("Passing Date value: ",value)
+    console.log("Passing Date value: ", value)
     dateClosePopup.value = true
 
-    if(selectedType.value == 'MULTIPLE'){
-        const today = moment(value)
+    if (selectedType.value == 'RANGE') {
+        today = moment(value)
         endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
         // console.log("New Date is", endDate.value)      
     }
 
     // if (toggleSW.value !== 'range') {
-    //     const today = moment(value)
+    //     today = moment(value)
     //     endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
     //     // console.log("New Date is", endDate.value)
     // }
@@ -723,8 +971,51 @@ async function onEndDate(value: any, reason: any, details: any) {
 }
 
 
-function onUpdateMonth(value: any, reason: any, details: any) {
-    console.log("Month", value)
+async function onUpdateToggle(){
+
+   switch(toggleSW.value){
+    case 'daily':
+        dataScope.value = 'Daily'
+        startDate.value = today.clone().startOf('day').format("YYYY-MM-DD HH:mm:ss")
+        endDate.value = today.clone().endOf('day').format("YYYY-MM-DD HH:mm:ss")
+        console.log("onUpdateToggle->StartDate", startDate.value)
+        console.log("onUpdateToggle->EndDate", endDate.value)
+        break;
+    case 'weekly':
+        dataScope.value = 'Weekly'
+        // weekStartDate.value = today.clone().startOf('week').format("YYYY-MM-DD HH:mm:ss")
+        weekStartDate.value = startDate.value
+        weekEndDate.value = today.clone().endOf('week').format("YYYY-MM-DD HH:mm:ss")
+        console.log("onUpdateToggle->weekStartDate", weekStartDate.value)
+        console.log("onUpdateToggle->weekEndDate", weekEndDate.value)
+        break;
+    case 'monthly':   
+        dataScope.value = 'Monthly'   
+        monthStartDate.value = today.clone().startOf('month').format("YYYY-MM-DD HH:mm:ss")
+        monthEndDate.value = today.clone().endOf('month').format("YYYY-MM-DD HH:mm:ss")
+        console.log("onUpdateToggle->monthStartDate", monthStartDate.value)
+        console.log("onUpdateToggle->monthEndDate", monthEndDate.value)
+        break;
+    case 'yearly':
+        dataScope.value = 'Yearly'
+        yearStartDate.value = today.clone().startOf('year').format("YYYY-MM-DD HH:mm:ss")
+        yearEndDate.value = today.clone().endOf('year').format("YYYY-MM-DD HH:mm:ss")
+        console.log("onUpdateToggle->yearStartDate",yearStartDate.value)
+        console.log("onUpdateToggle->yearEndDate",yearEndDate.value)
+        break;
+   }
+}
+
+async function onUpdateMonth(value: any, reason: any, details: any) {
+    console.log("onUpdateMonth", value)
+
+    today = moment(value)
+    monthStartDate.value = today.clone().startOf('month').format("YYYY-MM-DD HH:mm:ss")
+    monthEndDate.value = today.clone().endOf('month').format("YYYY-MM-DD HH:mm:ss")
+
+    console.log("onUpdateMonth->monthStartDate", monthStartDate.value)
+    console.log("onUpdateMonth->monthEndDate", monthEndDate.value)
+
 }
 
 async function showTrans() {
@@ -753,21 +1044,20 @@ async function getRowsNumberCount(filter: any): Promise<any> {
 }
 
 
-
 </script>
 
 <style scoped>
-.stacked-to-hor{
+.stacked-to-hor {
     /* .row > div{
         padding: 10px 15px;
         background: rgba(#999,.15);
         border: 1px solid rgba(#999,.2);
     } */
 
-    .row + .row{
+    .row+.row {
         margin-top: 1rem;
     }
-    
+
 }
 
 .select-date {
@@ -782,7 +1072,7 @@ async function getRowsNumberCount(filter: any): Promise<any> {
     order: 2;
 }
 
-.revenue-chart{
+.revenue-chart {
     order: 4;
     margin-top: 2rem;
 }
@@ -803,11 +1093,10 @@ async function getRowsNumberCount(filter: any): Promise<any> {
         margin-top: 1rem;
     }
 
-    .revenue-chart{
+    .revenue-chart {
         order: 4;
-        padding:1rem;
+        padding: 1rem;
         margin-top: 37rem;
     }
 }
-
 </style>

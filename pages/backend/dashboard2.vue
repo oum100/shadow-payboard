@@ -46,6 +46,10 @@
             </q-card>
         </div>
     </div>
+
+    <div>
+        <Radar/>
+    </div>
 </template>
 
 <script setup>

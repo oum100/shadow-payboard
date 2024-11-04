@@ -158,7 +158,7 @@ import { validateNewBranch } from '~/models/branch';
     const {data:dataTable} = await useFetch("/api/device/getAll")
     console.log("fetchData: ",dataTable.value?.data)
 
-    const count = dataTable.length
+    const count = dataTable.value?.data.length
     // console.log(count)
 
 
@@ -248,13 +248,17 @@ import { validateNewBranch } from '~/models/branch';
 
     rows.value.forEach((row:any, index:number) => {
         row.index = index+1
-        row.updatedAt = new Date(row.updatedAt).toLocaleString('th-TH')
+        // row.updatedAt = new Date(row.updatedAt).toLocaleString('th-TH')
 
-        // row.updatedAt= new Intl.DateTimeFormat('en-GB', {
-        //     dateStyle: 'short',
-        //     timeStyle: 'medium',
-        //     timeZone: 'Asia/Bangkok',
-        // }).format(new Date(row.updatedAt))
+
+        row.updatedAt= new Intl.DateTimeFormat('en-GB', {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+            timeZone: 'Asia/Bangkok',
+        }).format(new Date(row.updatedAt))
+
+
+        console.log("updatedAt: ",row.updatedAt)
     })
 
     const getSelectedString = ()=> {

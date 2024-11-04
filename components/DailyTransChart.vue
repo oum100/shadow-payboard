@@ -2,7 +2,6 @@
     <ClientOnly>
         <div id="chart">
             <apexchart type="radialBar" height="390" :options="chartOptions" :series="transSeries"></apexchart>
-            
         </div>
     </ClientOnly>
 </template>
@@ -18,6 +17,12 @@ const chartOptions = ref({
     chart: {
         height: 390,
         type: 'radialBar',
+        dropShadow: {
+                enabled: true,
+                blur: 1,
+                left: 1,
+                top: 1
+        }
     },
     plotOptions: {
         radialBar: {

@@ -4,8 +4,10 @@
             <template v-slot:append>
                 <q-icon v-if="props.year" name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="selectedData" mask="DD MMM YY"
+                        <q-date v-model="selectedData" mask="MMMM YYYY"
                             :range = "props.range"
+                            :title = monthOfYear
+                            subtitle = "Month Of Year"
                             v-close-popup="dateClosePopup"
                             @navigation="dateClosePopup = false">
                             <div class = "row items-center justify-end">
@@ -16,8 +18,10 @@
                 </q-icon>
                 <q-icon v-else name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="selectedData" mask="MMMM" 
+                        <q-date v-model="selectedData" mask="MMMM YYYY" 
                             :range = "props.range"
+                            :title = monthOfYear
+                            subtitle = "Month Of Year"
                             v-close-popup="dateClosePopup"
                             @navigation="dateClosePopup = false">
                             <div class = "row items-center justify-end">
@@ -32,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+    import moment from "moment-timezone";
+
     const props = defineProps({
         label:{type: String, required:true},
         selectedData: { type: String , required:true},
@@ -43,8 +49,13 @@
         'updated'
     ])
 
-    // console.log("props.selectedDate", props.selectedDate)
-    const selectedData = ref(props.selectedData)
+    const selectedData = ref()
+    const monthOfYear = ref()
+
+    // console.log("props.selectedData", props.selectedData)
+    const today = moment(props.selectedData).tz("Asia/Bangkok")
+    selectedData.value = today.format("MMMM YYYY")
+    monthOfYear.value = today.format("MMMM YYYY")
     const dateClosePopup = ref(false)
 
     watch(selectedData, (val) => {
@@ -55,7 +66,7 @@
 
     //Watch update  from the parent
     watch(() => props.selectedData, (val) => {
-        // console.log("parent selectedDate",val)
+        console.log("parent selectedDate",val)
         selectedData.value = val;
     });
 
