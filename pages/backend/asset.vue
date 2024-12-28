@@ -62,7 +62,7 @@
                     <q-btn icon="power_off" title="Out of service">Offline</q-btn>
                 </div>
                 <div class="q-mr-md q-guttar-md">
-                    <q-btn icon="add_circle" title="Create Job">Create</q-btn>
+                    <q-btn icon="add_circle" title="Create Job" @click="onCreate=true">Create</q-btn>
                     <q-btn icon="cancel" title="Cancel existing job">Cancel</q-btn>
                     <q-btn icon="fact_check" title="Testign Asset">Test</q-btn>
                 </div>
@@ -122,6 +122,12 @@
             Selected: {{ JSON.stringify(selected) }}
         </div> -->
     </div>
+
+   
+    <q-dialog v-model="onCreate" persistent>
+        <NewAsset/>
+    </q-dialog>
+    
 </template>    
 
 <script setup lang="ts">
@@ -133,6 +139,8 @@ import { validateNewBranch } from '~/models/branch';
     const filter = ref('')
     const loading = ref(false)
     let bName = ref()
+    const onCreate = ref(false);
+    const onEdit = ref(false);
 
     const pagination= ref({
             // sortBy:'branch',

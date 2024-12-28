@@ -12,3 +12,15 @@ export async function validateNewDevice(body:any){
     }).unknown(true)
     return schema.validate(body)
 }
+
+export interface Device {
+    merchantCode: string,
+    branchCode: string,
+    deviceName: string,
+    uuid: string,
+    macAddr: string,
+    type: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,    
+}
