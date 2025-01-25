@@ -1,3 +1,9 @@
+// 
+
+
+
+
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,48 +13,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model Merchants{
-    id              String          @id @default(auto()) @map("_id") @db.ObjectId
-    merchantCode    String          @unique
-    name            String
-    secretKey       String?
-    device          Devices[]
-    createdAt       DateTime        @db.Date @default(now())
-    updatedAt       DateTime?       @updatedAt     
+model Merchants {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  merchantCode    String    @unique
+  name            String
+  secretKey       String?
+  device          Devices[]
+  createdAt       DateTime  @db.Date @default(now())
+  updatedAt       DateTime? @updatedAt
 }
 
-model Devices{
-    id              String          @id @default(auto()) @map("_id") @db.ObjectId 
-    deviceName      String
-    uuid            String          @unique
-    macAddr         String
-    type            String
-    status          String
-    merchant        Merchants       @relation(fields: [merchantCode], references: [merchantCode], onDelete:Cascade, onUpdate:Cascade)
-    merchantCode    String          
-    branch          Branchs?         @relation(fields:[branchCode], references: [branchCode])
-    branchCode      String
-    machineSN       Machines?
-    product         Products[]
-    transaction     Transactions[]     
-    createdAt       DateTime        @db.Date @default(now())
-    updatedAt       DateTime?       @updatedAt        
+model Devices {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  deviceName      String
+  uuid            String        @unique
+  macAddr         String
+  type            String
+  status          String
+  merchant        Merchants     @relation(fields: [merchantCode], references: [merchantCode], onDelete: Cascade, onUpdate: Cascade)
+  merchantCode    String
+  branch          Branchs?      @relation(fields: [branchCode], references: [branchCode])
+  branchCode      String
+  machineSN       Machines?
+  product         Products[]
+  transaction     Transactions[]
+  createdAt       DateTime      @db.Date @default(now())
+  updatedAt       DateTime?     @updatedAt
+
+  // @@index([uuid], name: "idx_devices_uuid")
+  @@index([merchantCode], name: "idx_devices_merchantCode")
+  @@index([branchCode], name: "idx_devices_branchCode")
 }
-
-
 
 model Machines {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  serialNumber  String?       @unique(map: "serialNumber")
-  type          MachineType?  
-  model         String?       
-  orderAt       DateTime?     @db.Date
-  expireAt      DateTime?     @db.Date
-  device        Devices?     @relation(fields:[deviceUuid], references:[uuid], onUpdate:Cascade)
-  deviceUuid    String?      @unique
-  createdAt     DateTime      @db.Date @default(now())
-  updatedAt     DateTime?     @updatedAt  
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  serialNumber  String?     @unique(map: "serialNumber")
+  type          MachineType?
+  model         String?
+  orderAt       DateTime?   @db.Date
+  expireAt      DateTime?   @db.Date
+  device        Devices?    @relation(fields: [deviceUuid], references: [uuid], onUpdate: Cascade)
+  deviceUuid    String?     @unique
+  createdAt     DateTime    @db.Date @default(now())
+  updatedAt     DateTime?   @updatedAt
+
+  // @@index([deviceUuid], name: "idx_machines_deviceUuid")
 }
 
 enum MachineType {
@@ -64,48 +73,55 @@ enum MachineType {
   SOFTENER
 }
 
-model Branchs{
-  id                                String      @id @default(auto()) @map("_id") @db.ObjectId
-  branchCode                        String      @unique(map: "branchCode")
-  branchName                        String?
-  appKey                            String?
-  appSecret                         String?
-  device                            Devices[]
-  transaction                       Transactions[]
+model Branchs {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  branchCode      String        @unique(map: "branchCode")
+  branchName      String?       
+  appKey          String?
+  appSecret       String?
+  device          Devices[]
+  transaction     Transactions[]
+
+  @@index([branchName], name: "idx_branchs_branchName")
+  // @@index([branchCode], name: "idx_branchs_branchCode")
 }
 
-model Products{
-    id              String          @id @default(auto()) @map("_id") @db.ObjectId 
-    sku             String      
-    price           Int
-    qty             Int
-    unit            String
-    device          Devices  	    @relation(fields: [deviceUuid], references: [uuid], onUpdate:Cascade)
-    deviceUuid      String
-    createdAt       DateTime        @db.Date @default(now())
-    updatedAt       DateTime?       @updatedAt 
+model Products {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  sku             String
+  price           Int
+  qty             Int
+  unit            String
+  device          Devices     @relation(fields: [deviceUuid], references: [uuid], onUpdate: Cascade)
+  deviceUuid      String      
+  createdAt       DateTime    @db.Date @default(now())
+  updatedAt       DateTime?   @updatedAt
+
+  @@index([deviceUuid], name: "idx_products_deviceUuid")
 }
 
-model Transactions{
-    id              String          @id @default(auto()) @map("_id") @db.ObjectId 
-    branch          Branchs?        @relation(fields:[branchCode], references:[branchCode], onDelete:SetNull, onUpdate:Cascade)
-    branchCode      String?  
-    order           String          
-    paymentId       String?
-    paymentBy       String?
-    device          Devices  	      @relation(fields: [deviceUuid], references: [uuid], onUpdate:Cascade)
-    deviceUuid      String
-    amount          Int
-    status          String
-    jobState        String?
-    createdAt       DateTime        @db.Date @default(now())
-    updatedAt       DateTime?       @updatedAt 
+model Transactions {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  branch          Branchs?    @relation(fields: [branchCode], references: [branchCode], onDelete: SetNull, onUpdate: Cascade)
+  branchCode      String?
+  order           String
+  paymentId       String?
+  paymentBy       String?
+  device          Devices     @relation(fields: [deviceUuid], references: [uuid], onUpdate: Cascade)
+  deviceUuid      String
+  amount          Int
+  status          String
+  jobState        String?
+  createdAt       DateTime    @db.Date @default(now())
+  updatedAt       DateTime?   @updatedAt
+
+  @@index([branchCode], name: "idx_transactions_branchCode")
+  @@index([deviceUuid], name: "idx_transactions_deviceUuid")
+  @@index([createdAt], name: "idx_transactions_createdAt")
 }
 
 model CyberpayPaymentRequest {
   id                  String              @id @default(auto()) @map("_id") @db.ObjectId
-  // Partner             CyberpayPartner     @relation(fields: [partner_id], references:[partner_id])
-  // partner_id          String              @unique
   partner_id          String
   payment_channel_id  String
   ref_1               String              @unique
@@ -115,29 +131,29 @@ model CyberpayPaymentRequest {
   qrText              String
   qrImage             String
   paidNotify          CyberpayPaidNotify[]
-  createdAt           DateTime        @db.Date @default(now())
+  createdAt           DateTime            @db.Date @default(now())
 }
 
 model CyberpayPaidNotify {
   id                  String              @id @default(auto()) @map("_id") @db.ObjectId
-  Partner             CyberpayPartner     @relation(fields: [partner_id], references:[partner_id])
+  Partner             CyberpayPartner     @relation(fields: [partner_id], references: [partner_id])
   partner_id          String              @unique
   payment_channel_id  String
   transaction_id      String
-  payment_ref1        CyberpayPaymentRequest  @relation(fields:[ref_1], references:[ref_1])      
-  ref_1               String    
+  payment_ref1        CyberpayPaymentRequest  @relation(fields: [ref_1], references: [ref_1])
+  ref_1               String
   ref_2               String
   ref_3               String
   service_fee         Float
   bank_code           String
-  createdAt           DateTime                @db.Date @default(now())
-  notifySent          CyberpayNotifySent?     
+  createdAt           DateTime            @db.Date @default(now())
+  notifySent          CyberpayNotifySent?
 }
 
 model CyberpayNotifySent {
   id                  String          @id @default(auto()) @map("_id") @db.ObjectId
-  paidNotify          CyberpayPaidNotify?    @relation(fields:[paidNotify_id], references:[id])
-  paidNotify_id       String               @db.ObjectId  @unique
+  paidNotify          CyberpayPaidNotify?    @relation(fields: [paidNotify_id], references: [id])
+  paidNotify_id       String          @db.ObjectId @unique
   targetURL           String
   createdAt           DateTime        @db.Date @default(now())
 }
@@ -146,8 +162,5 @@ model CyberpayPartner {
   id                  String          @id @default(auto()) @map("_id") @db.ObjectId
   partner_id          String          @unique
   paidNotify          CyberpayPaidNotify?
-  // paymentRequest      CyberpayPaymentRequest?
   secretKey           String
 }
-
-
