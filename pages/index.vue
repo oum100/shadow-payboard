@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  useHead({
-    title: 'Payboard-Collector'
-  })
+useHead({
+  title: 'Payboard-Collector'
+})
 
-  await navigateTo('/backend/dashboard')
+// await navigateTo('/backend/dashboard')
 </script>
 <template>
-    <div>Payboard Collector</div>
+  <div>Payboard Collector</div>
 </template>
