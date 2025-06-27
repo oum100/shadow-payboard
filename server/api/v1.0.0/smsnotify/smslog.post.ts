@@ -10,13 +10,27 @@ const debug = Debug("api:smsnotify:smslog");
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
-  console.log("Body: ",body)
-  
-  const data: SmsLog = body.msg;
+  console.log("Body: ", body);
+
+  let data: SmsLog;
+  try {
+    data = JSON.parse(body.msg);
+  } catch (err) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Invalid JSON in 'msg'",
+    });
+  }
   console.log("Data: ", data);
 
   const text = data.message;
 
+  if (typeof text !== "string") {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Invalid or missing 'message' field in request body",
+    });
+  }
   // ดึง deposit to
   const depositToMatch = text.match(/Deposit to (\w+)/);
   const amountMatch = text.match(/amount\s([\d,.]+)\sBaht/);
