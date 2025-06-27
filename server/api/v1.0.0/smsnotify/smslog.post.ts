@@ -10,6 +10,8 @@ const debug = Debug("api:smsnotify:smslog");
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
+  console.log("Body: ",body)
+  
   const data: SmsLog = body.msg;
   console.log("Data: ", data);
 
