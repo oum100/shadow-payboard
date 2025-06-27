@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     CYBERPAY_PARTNER_ID: process.env.CYBERPAY_PARTNER_ID,
     CYBERPAY_SECRET: process.env.CYBERPAY_SECRET
   },
+
   modules: [
     'nuxt-quasar-ui',
     "@pinia/nuxt",
@@ -30,6 +31,6 @@ export default defineNuxtConfig({
     },
   },
 
-  devtools: { enabled: true }
-
+  devtools: { enabled: true },
+  compatibilityDate: '2025-02-28'
 })

@@ -164,3 +164,11 @@ model CyberpayPartner {
   paidNotify          CyberpayPaidNotify?
   secretKey           String
 }
+
+model Smslog {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  shop                String
+  sender              String
+  time                String
+  message             DateTime
+}

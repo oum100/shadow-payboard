@@ -80,7 +80,7 @@
                 <div class="q-px-md">
                     <q-card style="height:310px">
                         <q-card-section v-if="toggleSW == 'daily'" class="q-py-sm">
-                            <div class="text-h6">Revenue by machine type</div>
+                            <div class="text-h6">Revenue by machine</div>
                             <ClientOnly>
                                 <apexchart type="bar" height="250" :options="chartOptionsByType" :series=seriesRevenue />
                             </ClientOnly>
@@ -232,7 +232,6 @@
                         </ClientOnly>
                     </q-card-section>
                 </q-card>
-
             </div>
             <div v-if="toggleSW == 'weekly'" class="col-12 col-md-10">
                 <q-card  >
@@ -773,7 +772,7 @@ seriesRevenue.value = [
 const result: any = await $fetch('/api/transaction/groupByHour?filter='
     + branchSelected.value + '&startDate=' + startDate.value + '&endDate=' + endDate.value)
 
-// console.log("series data1", result.data)
+console.log("series data1", result.data)
 revenueData.value = result.data.revenue
 transactionData.value = result.data.transaction
 
