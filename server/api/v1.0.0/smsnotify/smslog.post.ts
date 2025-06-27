@@ -23,50 +23,55 @@ export default defineEventHandler(async (event) => {
 
   console.log("msg: ", message);
 
-  //   const text = data.message;
+  if (!message) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Message content not found in 'msg'",
+    });
+  }
 
-  //   if (typeof text !== "string") {
-  //     throw createError({
-  //       statusCode: 400,
-  //       statusMessage: "Invalid or missing 'message' field in request body",
-  //     });
-  //   }
+  // ดึงข้อมูลจาก message
+  const depositToMatch = message.match(/Deposit to (\w+)/);
+  const amountMatch = message.match(/amount\s([\d,.]+)\sBaht/);
+  const balanceMatch = message.match(/balance\s([\d,.]+)\sBaht/);
 
-  // ดึง deposit to
-  //   const depositToMatch = text.match(/Deposit to (\w+)/);
-  //   const amountMatch = text.match(/amount\s([\d,.]+)\sBaht/);
-  //   const balanceMatch = text.match(/balance\s([\d,.]+)\sBaht/);
+  const depositTo = depositToMatch?.[1] || null;
+  const amount = amountMatch
+    ? parseFloat(amountMatch[1].replace(/,/g, ""))
+    : null;
+  const balance = balanceMatch
+    ? parseFloat(balanceMatch[1].replace(/,/g, ""))
+    : null;
 
-  //   // แปลงค่าที่ได้
-  //   const depositTo = depositToMatch ? depositToMatch[1] : null;
-  //   const amount = amountMatch
-  //     ? parseFloat(amountMatch[1].replace(/,/g, ""))
-  //     : null;
+  // แปลงเวลา
+  const rawTime = timeRaw.replace(" ", ""); // remove special space
+  const now = new Date(); // ใช้ปีปัจจุบัน
+  const dateTimeString = `${now.getFullYear()}/${rawTime}`; // เช่น "2025/06/28, 12:40 AM"
+  const parsedTime = new Date(dateTimeString);
 
-  //   const balance = balanceMatch
-  //     ? parseFloat(balanceMatch[1].replace(/,/g, ""))
-  //     : null;
+  if (isNaN(parsedTime.getTime())) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Invalid time format",
+    });
+  }
 
-  //   console.log("Deposit To:", depositTo); // xxx122856x
-  //   console.log("Amount:", amount); // 2.01
-  //   console.log("Balance:", balance); // 38826.03
-
-  //   data.bankAccount = depositTo as string;
-  //   data.amount = amount;
-  //   data.balance = balance;
-
-  //   // แปลงเป็น Date โดยใช้ moment หรือ JavaScript ล้วน
-
-  //   const parsedTime = new Date(
-  //     data.time.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
-  //   ); // → "2025-06-27T21:09:00.000Z"
-
-  //   if (isNaN(parsedTime.getTime())) {
-  //     throw new Error("Invalid time format");
-  //   }
+  // Save ลง Prisma
+  const saveData = await prisma.smslog.create({
+    data: {
+      shop,
+      sender,
+      time: parsedTime,
+      message,
+      bankAccount: depositTo,
+      amount,
+      balance,
+    },
+  });
 
   return {
     status: true,
     message: "success",
+    data: saveData,
   };
 });
