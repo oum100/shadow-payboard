@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
   try {
     data = JSON.parse(body.msg);
   } catch (err) {
+    console.error("Failed to parse body.msg:", err);
     throw createError({
       statusCode: 400,
       statusMessage: "Invalid JSON in 'msg'",
@@ -31,6 +32,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: "Invalid or missing 'message' field in request body",
     });
   }
+
+
   // ดึง deposit to
   const depositToMatch = text.match(/Deposit to (\w+)/);
   const amountMatch = text.match(/amount\s([\d,.]+)\sBaht/);
