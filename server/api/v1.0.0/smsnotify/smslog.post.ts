@@ -13,15 +13,16 @@ export default defineEventHandler(async (event) => {
   console.log("Body: ", body);
 
   let data: SmsLog;
-  try {
-    data = JSON.parse(body.msg);
-  } catch (err) {
-    console.error("Failed to parse body.msg:", err);
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid JSON in 'msg'",
-    });
-  }
+      data = body.msg
+//   try {
+//     data = JSON.parse(body.msg);
+//   } catch (err) {
+//     console.error("Failed to parse body.msg:", err);
+//     throw createError({
+//       statusCode: 400,
+//       statusMessage: "Invalid JSON in 'msg'",
+//     });
+//   }
   console.log("Data: ", data);
 
   const text = data.message;
