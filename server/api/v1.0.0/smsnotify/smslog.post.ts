@@ -50,6 +50,7 @@ export default defineEventHandler(async (event) => {
   const parsedTime = new Date(dateTimeString);
 
   if (isNaN(parsedTime.getTime())) {
+    console.log("error 1")
     throw createError({
       statusCode: 400,
       statusMessage: "Invalid time format",
@@ -57,21 +58,28 @@ export default defineEventHandler(async (event) => {
   }
 
   // Save ลง Prisma
-  const saveData = await prisma.smslog.create({
-    data: {
-      shop,
-      sender,
-      time: parsedTime,
-      message,
-      bankAccount: depositTo,
-      amount,
-      balance,
-    },
-  });
+  try{
+    const saveData = await prisma.smslog.create({
+        data: {
+        shop,
+        sender,
+        time: parsedTime,
+        message,
+        bankAccount: depositTo,
+        amount,
+        balance,
+        },
+    });
 
-  return {
-    status: true,
-    message: "success",
-    data: saveData,
-  };
+      return {
+            status: true,
+            message: "success",
+            data: saveData,
+     };
+  }catch(err){
+    console.log("Error 2")
+  }
+
+
+ 
 });
