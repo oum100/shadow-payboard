@@ -27,12 +27,12 @@ export default defineEventHandler(async (event) => {
 
   const text = data.message;
 
-  if (typeof text !== "string") {
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid or missing 'message' field in request body",
-    });
-  }
+//   if (typeof text !== "string") {
+//     throw createError({
+//       statusCode: 400,
+//       statusMessage: "Invalid or missing 'message' field in request body",
+//     });
+//   }
 
 
   // ดึง deposit to
