@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
   console.log("msg: ", message);
 
   if (!message) {
+    console.log("Error 1")
     throw createError({
       statusCode: 400,
       message: "Message content not found in 'msg'",
@@ -53,6 +54,7 @@ export default defineEventHandler(async (event) => {
   );
 
   if (isNaN(dateObj.getTime())) {
+    console.log("Error 2")
     throw createError({
       statusCode: 400,
       message: "ไม่สามารถแปลงเวลาได้",
@@ -69,17 +71,17 @@ export default defineEventHandler(async (event) => {
 
   // Save ลง Prisma
   try {
-    // const saveData = await prisma.smslog.create({
-    //   data: {
-    //     shop,
-    //     sender,
-    //     time: dateObj,
-    //     message,
-    //     bankAccount: depositTo,
-    //     amount,
-    //     balance,
-    //   },
-    // });
+    const saveData = await prisma.smslog.create({
+      data: {
+        shop,
+        sender,
+        time: dateObj,
+        message,
+        bankAccount: depositTo,
+        amount,
+        balance,
+      },
+    });
 
     return {
       status: true,
