@@ -34,6 +34,30 @@ export default defineEventHandler(async (event) => {
   const depositToMatch = message.match(/Deposit to (\w+)/);
   const amountMatch = message.match(/amount\s([\d,.]+)\sBaht/);
   const balanceMatch = message.match(/balance\s([\d,.]+)\sBaht/);
+  const timeMatch = message.match(
+    /\((\d{1,2}\/\d{1,2}\/\d{2}),\s*(\d{1,2}:\d{2})hr\)/
+  );
+
+  const [_, day, month, yearShort, hour, minute] = timeMatch;
+
+  // แปลงปีให้อยู่ในรูปแบบ 4 หลัก
+  const fullYear = parseInt(yearShort) + 2000;
+
+  // สร้าง Date object (ตามเวลาท้องถิ่น)
+  const dateObj = new Date(
+    fullYear,
+    parseInt(month) - 1,
+    parseInt(day),
+    parseInt(hour),
+    parseInt(minute)
+  );
+
+  if (isNaN(dateObj.getTime())) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "ไม่สามารถแปลงเวลาได้",
+    });
+  }
 
   const depositTo = depositToMatch?.[1] || null;
   const amount = amountMatch
@@ -43,43 +67,26 @@ export default defineEventHandler(async (event) => {
     ? parseFloat(balanceMatch[1].replace(/,/g, ""))
     : null;
 
-  // แปลงเวลา
-  const rawTime = timeRaw.replace(" ", ""); // remove special space
-  const now = new Date(); // ใช้ปีปัจจุบัน
-  const dateTimeString = `${now.getFullYear()}/${rawTime}`; // เช่น "2025/06/28, 12:40 AM"
-  const parsedTime = new Date(dateTimeString);
-
-  if (isNaN(parsedTime.getTime())) {
-    console.log("error 1")
-    throw createError({
-      statusCode: 400,
-      statusMessage: "Invalid time format",
-    });
-  }
-
   // Save ลง Prisma
-  try{
+  try {
     const saveData = await prisma.smslog.create({
-        data: {
+      data: {
         shop,
         sender,
-        time: parsedTime,
+        time: dateObj,
         message,
         bankAccount: depositTo,
         amount,
         balance,
-        },
+      },
     });
 
-      return {
-            status: true,
-            message: "success",
-            data: saveData,
-     };
-  }catch(err){
-    console.log("Error 2")
+    return {
+      status: true,
+      message: "success",
+      data: saveData,
+    };
+  } catch (err) {
+    console.log("Error 2");
   }
-
-
- 
 });
