@@ -169,6 +169,9 @@ model Smslog {
   id                  String          @id @default(auto()) @map("_id") @db.ObjectId
   shop                String
   sender              String
-  time                String
-  message             DateTime
+  time                DateTime
+  message             String
+  bankAccount         String?
+  amount              Float?
+  balance             Float?
 }
