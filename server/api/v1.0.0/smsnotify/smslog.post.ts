@@ -47,39 +47,33 @@ export default defineEventHandler(async (event) => {
   console.log("Deposit To: ", depositTo);
   console.log("timeMatch: ", timeMatch);
 
-  const [_, day, month, yearShort, hour, minute] = timeMatch;
-  console.log("Day: ",day)
-  console.log("Month: ",month)
-  console.log("yearShort: ",yearShort)
-  console.log("Hour: ",hour)
-  console.log("Minute: ",minute)
   
-
   console.log("timeMatch1: ", timeMatch[1])
   console.log("timeMatch2: ", timeMatch[2])
 
-  // แปลงปีให้อยู่ในรูปแบบ 4 หลัก
-  const fullYear = parseInt(yearShort) + 2000;
-  console.log("fullYear: ",fullYear)
 
-  // สร้าง Date object (ตามเวลาท้องถิ่น)
-  const dateObj = new Date(
-    fullYear,
-    parseInt(month) - 1,
-    parseInt(day),
-    parseInt(hour),
-    parseInt(minute)
-  );
+const datePart = timeMatch[1]; // "29/6/25"
+const timePart = timeMatch[2]; // "21:55"
 
-  console.log("dateObj: ",dateObj)
+// แยกส่วนของวัน เวลา
+const [day, month, yearShort] = datePart.split("/").map(Number);
+const [hour, minute] = timePart.split(":").map(Number);
 
-  // if (isNaN(dateObj.getTime())) {
-  //   console.log("Error 2")
-  //   throw createError({
-  //     statusCode: 400,
-  //     message: "ไม่สามารถแปลงเวลาได้",
-  //   });
-  // }
+// แปลงปี ค.ศ. (25 → 2025)
+const fullYear = yearShort + 2000;
+
+// สร้าง Date object (เวลาท้องถิ่น)
+const dateObj = new Date(fullYear, month - 1, day, hour, minute);
+
+if (isNaN(dateObj.getTime())) {
+  throw createError({
+    statusCode: 400,
+    message: "Invalid date format",
+  });
+}
+
+console.log("Date object:", dateObj);
+console.log("ISO string:", dateObj.toISOString());
 
   // Save ลง Prisma
   try {
