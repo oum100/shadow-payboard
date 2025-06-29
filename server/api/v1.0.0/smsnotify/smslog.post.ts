@@ -20,9 +20,9 @@ export default defineEventHandler(async (event) => {
   const messageMatch = msgRaw.match(/"message":"([^"]+)"/);
   const message = messageMatch ? messageMatch[1] : null;
 
-  console.log("Shop: ", shop);
-  console.log("Sender: ", sender);
-  console.log("msg: ", message);
+  // console.log("Shop: ", shop);
+  // console.log("Sender: ", sender);
+  // console.log("msg: ", message);
 
   // ดึงข้อมูลจาก message
   const depositToMatch = message.match(/Deposit to (\w+)/);
@@ -42,57 +42,47 @@ export default defineEventHandler(async (event) => {
     /\((\d{1,2}\/\d{1,2}\/\d{2}),\s*(\d{1,2}:\d{2})hr\)/
   );
 
-  console.log("Amount: ", amount);
-  console.log("Balance: ", balance);
-  console.log("Deposit To: ", depositTo);
-  console.log("timeMatch: ", timeMatch);
+  const datePart = timeMatch[1]; // "29/6/25"
+  const timePart = timeMatch[2]; // "21:55"
 
-  
-  console.log("timeMatch1: ", timeMatch[1])
-  console.log("timeMatch2: ", timeMatch[2])
+  // แยกส่วนของวัน เวลา
+  const [day, month, yearShort] = datePart.split("/").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
 
+  // แปลงปี ค.ศ. (25 → 2025)
+  const fullYear = yearShort + 2000;
 
-const datePart = timeMatch[1]; // "29/6/25"
-const timePart = timeMatch[2]; // "21:55"
+  // สร้าง Date object (เวลาท้องถิ่น)
+  const dateObj = new Date(fullYear, month - 1, day, hour, minute);
 
-// แยกส่วนของวัน เวลา
-const [day, month, yearShort] = datePart.split("/").map(Number);
-const [hour, minute] = timePart.split(":").map(Number);
+  if (isNaN(dateObj.getTime())) {
+    throw createError({
+      statusCode: 400,
+      message: "Invalid date format",
+    });
+  }
 
-// แปลงปี ค.ศ. (25 → 2025)
-const fullYear = yearShort + 2000;
-
-// สร้าง Date object (เวลาท้องถิ่น)
-const dateObj = new Date(fullYear, month - 1, day, hour, minute);
-
-if (isNaN(dateObj.getTime())) {
-  throw createError({
-    statusCode: 400,
-    message: "Invalid date format",
-  });
-}
-
-console.log("Date object:", dateObj);
-console.log("ISO string:", dateObj.toISOString());
+  // console.log("Date object:", dateObj);
+  // console.log("ISO string:", dateObj.toISOString());
 
   // Save ลง Prisma
   try {
-    // const saveData = await prisma.smslog.create({
-    //   data: {
-    //     shop,
-    //     sender,
-    //     time: dateObj,
-    //     message,
-    //     bankAccount: depositTo,
-    //     amount,
-    //     balance,
-    //   },
-    // });
+    const saveData = await prisma.smslog.create({
+      data: {
+        shop,
+        sender,
+        time: dateObj,
+        message,
+        bankAccount: depositTo,
+        amount,
+        balance,
+      },
+    });
 
     return {
       status: true,
       message: "success",
-      //   data: saveData,
+        data: saveData,
     };
   } catch (err) {
     console.log("Error3");
