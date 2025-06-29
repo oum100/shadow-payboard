@@ -48,18 +48,30 @@ export default defineEventHandler(async (event) => {
   console.log("timeMatch: ", timeMatch);
 
   const [_, day, month, yearShort, hour, minute] = timeMatch;
+  console.log("Day: ",day)
+  console.log("Month: ",month)
+  console.log("yearShort: ",yearShort)
+  console.log("Hour: ",hour)
+  console.log("Minute: ",minute)
+  
+
+  console.log("timeMatch1: ", timeMatch[1])
+  console.log("timeMatch2: ", timeMatch[2])
 
   // แปลงปีให้อยู่ในรูปแบบ 4 หลัก
   const fullYear = parseInt(yearShort) + 2000;
+  console.log("fullYear: ",fullYear)
 
   // สร้าง Date object (ตามเวลาท้องถิ่น)
-  // const dateObj = new Date(
-  //   fullYear,
-  //   parseInt(month) - 1,
-  //   parseInt(day),
-  //   parseInt(hour),
-  //   parseInt(minute)
-  // );
+  const dateObj = new Date(
+    fullYear,
+    parseInt(month) - 1,
+    parseInt(day),
+    parseInt(hour),
+    parseInt(minute)
+  );
+
+  console.log("dateObj: ",dateObj)
 
   // if (isNaN(dateObj.getTime())) {
   //   console.log("Error 2")
