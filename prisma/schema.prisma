@@ -168,10 +168,25 @@ model CyberpayPartner {
 model Smslog {
   id                  String          @id @default(auto()) @map("_id") @db.ObjectId
   shop                String
+  channel             String?
   sender              String
-  time                DateTime
+  time                DateTime        
   message             String
   bankAccount         String?
   amount              Float?
   balance             Float?
+}
+
+model notifyMsgLog{
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  channel             String?
+  bankName            String?
+  subChannel          String?
+  shopName            String
+  sender              String?
+  time                DateTime        
+  message             String
+  bankAccount         String?
+  amount              Float?
+  balance             Float? 
 }
