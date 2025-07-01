@@ -4,6 +4,8 @@ export function handleMaemaneeMsg(msg: string): SMSFORWARD {
   let data: SMSFORWARD;
 
   const msgRaw = msg;
+//   console.log("msg: ", msg);
+
   //Getting Shop name
   const shopRaw = msgRaw.match(/Shop:([^\s]+)/);
   const shop = shopRaw?.[1] || null;
@@ -23,7 +25,7 @@ export function handleMaemaneeMsg(msg: string): SMSFORWARD {
   const timeRaw = msgRaw.match(
     /\((\d{1,2}\/\d{1,2}\/\d{2,4}),\s*(\d{1,2}:\d{2})hr\)/
   );
-//   console.log("timeRaw: ", timeRaw);
+  //   console.log("timeRaw: ", timeRaw);
   const datePart = timeRaw?.[1]; // "29/6/25"
   const timePart = timeRaw?.[2]; // "21:55"
 

@@ -14,22 +14,29 @@ export default defineEventHandler(async (event) => {
 
   //หา no-break space และแทนทีช่องว่างแปลกๆ
   const normalizedMsg = query.payload as string;
+  for (const char of normalizedMsg) {
+    const code = char.charCodeAt(0).toString(16).padStart(4, "0").toUpperCase();
+    console.log(`${char} → U+${code}`);
+  }
+
   const msgRaw = normalizedMsg.replace(/[\u202f\u00a0\n\"]/g, " ");
-  // console.log("msgRaw: ",msgRaw)
   // console.log("\n")
 
   //Looking for sender
   const msgFromRaw = msgRaw.match(/Sender:([^\s]+(?:\s[^\s]+)?)\sMsg/);
-  const msgFrom = msgFromRaw?.[1] || null;
+  const msgFrom = msgFromRaw?.[1].trim() || null;
 
-  if (msgFrom === "SCB Easy") {
+
+  if (msgFrom?.includes("SCB Easy")) {
     data = handleScbEasy(msgRaw);
-  } else if (msgFrom === "Krungsri") {
+  } else if (msgFrom?.includes("Krungsri")) {
     // SMS Krungsri
     data = handleKrungsriSMS(msgRaw);
-  } else if (msgFrom === "แอปพลิเคชั่น แม่มณี") {
+  } else if (msgFrom?.includes("แม่มณี")) {
+
     //App SCB MaeManee
     data = handleMaemaneeMsg(msgRaw);
+    console.log("3");
   }
 
   console.log("Data: ", data);
@@ -42,7 +49,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      data: saveData,
+      data: data,
     };
   } catch (error) {
     let statusMessage = "Unknown error";
