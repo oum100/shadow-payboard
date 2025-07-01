@@ -99,15 +99,6 @@ export default defineEventHandler(async (event) => {
 
     parsedDate = new Date(year, month, parseInt(day), hour, minute);
     console.log("parseDate: ", parsedDate);
-
-    // dateRaw = `${day} ${thaiMonth} ${yearThai} - ${time}`;
-
-    // console.log("Day: ", day);
-    // console.log("month: ", month);
-    // console.log("year: ", year);
-    // console.log("HH:MM ", hour + ":" + minute);
-
-    // console.log("dateRaw: ", dateRaw);
   }
 
   //✅ 4. เก็บลงฐานข้อมูล
