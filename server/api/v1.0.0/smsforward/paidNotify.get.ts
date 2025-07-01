@@ -1,112 +1,66 @@
 import { errorMessages } from "vue/compiler-sfc";
 import { PrismaClient } from "@prisma/client";
 import Debug from "debug";
+import { handleMaemaneeMsg } from "./maemanee";
+import { handleKrungsriSMS } from "./krungsriSMS";
+import { handleScbEasy } from "./scbeasy";
 
 const prisma = new PrismaClient();
 const debug = Debug("api:cyberpay:painNotify");
+let data: any = undefined;
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
 
-  console.log(query);
-
+  //หา no-break space และแทนทีช่องว่างแปลกๆ
   const normalizedMsg = query.payload as string;
-  // Normalize: ลบ narrow no-break space (U+202F) และช่องว่างแปลกๆ
-  const msgRaw = normalizedMsg.replace(/[\u202f\u00a0]/g, " ");
-  console.log("msgRaw: ", msgRaw);
-  console.log("\n")
-
-  //Looking for shop
-  const shopRaw = msgRaw.match(/Shop:([^\s]+)/)
-//   console.log("shopRaw: ",shopRaw)
-  const shop = shopRaw?.[1] || null
-  console.log("Shop: ",shop)
+  const msgRaw = normalizedMsg.replace(/[\u202f\u00a0\n\"]/g, " ");
+  // console.log("msgRaw: ",msgRaw)
+  // console.log("\n")
 
   //Looking for sender
-  const msgFromRaw = msgRaw.match(/Sender:([^\s]+(?:\s[^\s]+)?)/)
-//   console.log("msgFromRaw", msgFromRaw)
-    const msgFrom = msgFromRaw?.[1] || null
-  console.log("msgFrom: ",msgFrom)
+  const msgFromRaw = msgRaw.match(/Sender:([^\s]+(?:\s[^\s]+)?)\sMsg/);
+  const msgFrom = msgFromRaw?.[1] || null;
 
-  //Find Channel
-  const channelRaw =  msgRaw.match(/บาท\s([^\s]+)\s*จาก/)
-//   console.log("sendFromRaw: ",sendFromRaw)
-  const channel = channelRaw?.[1] || null
-//   console.log("\n")
-  console.log("Channel: ",channel)
-
-//   const msgFrom = msgRaw.includes("เข้าร้านค้า");
-//   console.log("msgFrom: ", msgFrom);
-
-  // ✅ 1. ดึง income
-  const incomeMatch = msgRaw.match(/คุณได้รับเงิน\s([\d,.]+)\sบาท/);
-  const income = incomeMatch
-    ? parseFloat(incomeMatch[1].replace(/,/g, ""))
-    : null;
-  console.log("Income: ", income);  
-
-  //✅ 2. ดูว่าส่งเข้า MaeManee (เข้าร้านค้า) or เข้าบัญชีปกติ  (ผ่านรายการพร้อมเพย์)
-
-  if (channel === 'เข้าร้านค้า') {
-    //Message from แม่มณี
-    // console.log("This channel is Maemanee")
-    const senderRaw = msgRaw.match(/จาก\s(\w+)/);
-    const sender = senderRaw?.[1].trim() || null;
-    console.log("Sender: ", sender);
-
-  } else if(channel === 'ผ่านรายการพร้อมเพย์') {
-    // console.log("This channel is SCB Promptpay")
-
-    const senderRaw = msgRaw.match(/จาก\s+(.*?)\s+เข้าบัญชี/);
-    // console.log("senderRaw: ", senderRaw)
-    const sender = senderRaw?.[1].trim() || null;
-    console.log("Sender: ", sender);    
+  if (msgFrom === "SCB Easy") {
+    data = handleScbEasy(msgRaw);
+  } else if (msgFrom === "Krungsri") {
+    // SMS Krungsri
+    data = handleKrungsriSMS(msgRaw);
+  } else if (msgFrom === "แอปพลิเคชั่น แม่มณี") {
+    //App SCB MaeManee
+    data = handleMaemaneeMsg(msgRaw);
   }
 
-  //✅ 3. ลองจับ pattern วันเวลาแบบไทย
-  const dateMatch = normalizedMsg.match(
-    /เมื่อ\s+(\d{1,2})\s+(ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\.)\s+(\d{4})\s*-\s*(\d{1,2}:\d{2})/
-  );
+  console.log("Data: ", data);
+  console.log("\n");
 
-  if (!dateMatch) {
-    console.log("❌ ไม่ match");
-  } 
+  try {
+    const saveData = await prisma.notifyMsgLog.create({
+      data: data,
+    });
 
-  let dateRaw: string | null = null;
-  let parsedDate: Date | null = null;
-
-  if (dateMatch) {
-    const [_, day, thaiMonth, yearThai, time] = dateMatch;
-
-    const monthMap: Record<string, number> = {
-      "ม.ค.": 0,
-      "ก.พ.": 1,
-      "มี.ค.": 2,
-      "เม.ย.": 3,
-      "พ.ค.": 4,
-      "มิ.ย.": 5,
-      "ก.ค.": 6,
-      "ส.ค.": 7,
-      "ก.ย.": 8,
-      "ต.ค.": 9,
-      "พ.ย.": 10,
-      "ธ.ค.": 11,
+    return {
+      success: true,
+      data: saveData,
     };
+  } catch (error) {
+    let statusMessage = "Unknown error";
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "details" in error &&
+      Array.isArray((error as any).details) &&
+      (error as any).details[0]?.message
+    ) {
+      statusMessage = (error as any).details[0].message;
+    } else if (error instanceof Error) {
+      statusMessage = error.message;
+    }
 
-    const month = monthMap[thaiMonth];
-    const year = parseInt(yearThai) - 543; // พ.ศ. → ค.ศ.
-    const [hour, minute] = time.split(":").map(Number);
-
-    parsedDate = new Date(year, month, parseInt(day), hour, minute);
-    console.log("parseDate: ", parsedDate);
+    throw createError({
+      statusCode: 400,
+      statusMessage,
+    });
   }
-
-  //✅ 4. เก็บลงฐานข้อมูล
-
-  // return {
-  //   status: true,
-  //   message: "success",
-  //     data: saveData,
-  // };
-  return query;
 });

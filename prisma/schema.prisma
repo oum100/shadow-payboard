@@ -179,14 +179,10 @@ model Smslog {
 
 model notifyMsgLog{
   id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  msgRaw              String
+  shop                String
   channel             String?
-  bankName            String?
-  subChannel          String?
-  shopName            String
   sender              String?
-  time                DateTime        
-  message             String
-  bankAccount         String?
   amount              Float?
-  balance             Float? 
+  datetime            DateTime        
 }
