@@ -30,133 +30,161 @@ export default defineEventHandler(async (event) => {
     console.log("->endDate->ISO: ", endDate);
   }
 
-
   if (filter === "ALL") {
     // Fetch transactions and group by hour using Prisma
     const trans = await prisma.transactions.findMany({
-      select: {
-        device: {
-          select: {
-            branch: true,
-            type: true,
-          },
-        },
-        paymentBy:true,
-        amount: true,
-        createdAt: true,
-      },
       where: {
         createdAt: {
           gte: startDate,
           lt: endDate,
         },
       },
+      select: {
+        // device: {
+        //   select: {
+        //     branch: true,
+        //     type: true,
+        //   },
+        // },
+        deviceUuid: true,
+        paymentBy: true,
+        amount: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "asc" },
     });
 
-    // console.log("Result Trans: ", trans);
+    // 2) สร้างชุด uuid แล้วไปดึง Devices + Branchs มาเอง
+    const uuids = Array.from(
+      new Set(trans.map((t) => t.deviceUuid).filter(Boolean))
+    ) as string[];
 
+    const devices = uuids.length
+      ? await prisma.devices.findMany({
+          where: { uuid: { in: uuids } },
+          select: {
+            uuid: true,
+            type: true, // schema คุณเป็น String; ถ้าอยากใช้ enum ให้ปรับ schema ภายหลัง
+            branch: {
+              select: { branchName: true },
+            },
+          },
+        })
+      : [];
+
+    const deviceMap = new Map<string, (typeof devices)[number]>();
+    devices.forEach((d) => deviceMap.set(d.uuid, d));
+
+    const zeros = () => Array(24).fill(0);
     // Initialize arrays to hold hourly amounts for different machine types
-    const hourlyTotal = Array(24).fill(0);
-    const hourlyTotalByQR = Array(24).fill(0);
-    const hourlyTotalByCash = Array(24).fill(0);
+    const hourlyTotal = zeros();
+    const hourlyTotalByQR = zeros();
+    const hourlyTotalByCash = zeros();
 
-    const hourlyWasher = Array(24).fill(0);
-    const hourlyWasherByQR = Array(24).fill(0);
-    const hourlyWasherByCash = Array(24).fill(0);
+    const hourlyWasher = zeros();
+    const hourlyWasherByQR = zeros();
+    const hourlyWasherByCash = zeros();
 
-    const hourlyDryer = Array(24).fill(0);
-    const hourlyDryerByQR = Array(24).fill(0);
-    const hourlyDryerByCash = Array(24).fill(0);
+    const hourlyDryer = zeros();
+    const hourlyDryerByQR = zeros();
+    const hourlyDryerByCash = zeros();
 
-    const hourlyTotalTrans = Array(24).fill(0)
-    const hourlyTotalTransByQR = Array(24).fill(0)
-    const hourlyTotalTransByCash = Array(24).fill(0)
+    const hourlyTotalTrans = zeros();
+    const hourlyTotalTransByQR = zeros();
+    const hourlyTotalTransByCash = zeros();
 
-    const hourlyWasherTrans = Array(24).fill(0)
-    const hourlyWasherTransByQR = Array(24).fill(0)
-    const hourlyWasherTransByCash = Array(24).fill(0)
+    const hourlyWasherTrans = zeros();
+    const hourlyWasherTransByQR = zeros();
+    const hourlyWasherTransByCash = zeros();
 
-    const hourlyDryerTrans = Array(24).fill(0);
-    const hourlyDryerTransByQR = Array(24).fill(0)
-    const hourlyDryerTransByCash = Array(24).fill(0)
+    const hourlyDryerTrans = zeros();
+    const hourlyDryerTransByQR = zeros();
+    const hourlyDryerTransByCash = zeros();
 
     const hourlyBranch = Array(10).fill(0);
-    hourlyBranch[0] = Array(24).fill(0);
-    hourlyBranch[1] = Array(24).fill(0);
+    hourlyBranch[0] = zeros();
+    hourlyBranch[1] = zeros();
 
-    const hourlyBranch1 = Array(24).fill(0);
-    const hourlyBranch2 = Array(24).fill(0);
-
-
+    const hourlyBranch1 = zeros();
+    const hourlyBranch2 = zeros();
 
     // Iterate over the transactions to group amounts by hour
     trans.forEach((item) => {
+      // Lookup device info using deviceUuid
+      const device = item.deviceUuid
+        ? deviceMap.get(item.deviceUuid)
+        : undefined;
+
       // An hour must be in correct timezone.
       const hour = moment(item.createdAt).tz("Asia/Bangkok").hour();
       hourlyTotal[hour] += item.amount ?? 0;
-      if (item.paymentBy === "qrcode") {}
-      if (item.paymentBy === "cash") {} 
+      if (item.paymentBy === "qrcode") {
+      }
+      if (item.paymentBy === "cash") {
+      }
 
       // Further classify by machine type
-      if (item.device.type === "Washer") {
+      if (device?.type === "Washer") {
         hourlyWasher[hour] += item.amount ?? 0;
-        if (item.paymentBy === "qrcode") {}
-        if (item.paymentBy === "cash") {}
-      } else if (item.device.type === "Dryer") {
+        if (item.paymentBy === "qrcode") {
+        }
+        if (item.paymentBy === "cash") {
+        }
+      } else if (device?.type === "Dryer") {
         hourlyDryer[hour] += item.amount ?? 0;
-        if (item.paymentBy === "qrcode") {}
-        if (item.paymentBy === "cash") {}
+        if (item.paymentBy === "qrcode") {
+        }
+        if (item.paymentBy === "cash") {
+        }
       }
 
       // Futher classify by paymentBy
-      if(item.paymentBy === 'qrcode'){
-        
+      if (item.paymentBy === "qrcode") {
       }
 
-
       // Further classify by branch
-      if (item.device.branch?.branchName === "SkyView") {
+      if (device?.branch?.branchName === "SkyView") {
         hourlyBranch1[hour] += item.amount ?? 0;
-      } else if (item.device.branch?.branchName === "RGH-18") {
+      } else if (device?.branch?.branchName === "RGH-18") {
         hourlyBranch2[hour] += item.amount ?? 0;
       }
     });
 
     // Prepare the result object with the grouped data
     const result = {
-        revenue:[
-            {
-              name: "Total",
-              type: "line",
-              data: hourlyTotal,
-            },
-            {
-              name: "Washer",
-              type: "column",
-              data: hourlyWasher,
-            },
-            {
-              name: "Dryer",
-              type: "column",
-              data: hourlyDryer,
-            },
-            {
-              name: "SkyView",
-              type: "area",
-              data: hourlyBranch1,
-            },
-            {
-              name: "RGH-18",
-              type: "area",
-              data: hourlyBranch2,
-            },
-          ],
-        transaction:[]
-    }
+      revenue: [
+        {
+          name: "Total",
+          type: "line",
+          data: hourlyTotal,
+        },
+        {
+          name: "Washer",
+          type: "column",
+          data: hourlyWasher,
+        },
+        {
+          name: "Dryer",
+          type: "column",
+          data: hourlyDryer,
+        },
+        {
+          name: "SkyView",
+          type: "area",
+          data: hourlyBranch1,
+        },
+        {
+          name: "RGH-18",
+          type: "area",
+          data: hourlyBranch2,
+        },
+      ],
+      transaction: [],
+    };
 
     return {
       data: result,
-        // data: trans,
+      // data: trans,
     };
   } else {
     const trans = await prisma.transactions.findMany({
@@ -189,39 +217,38 @@ export default defineEventHandler(async (event) => {
 
     // Iterate over the transactions to group amounts by hour
     trans.forEach((item) => {
-  
       const hour = moment(item.createdAt).tz("Asia/Bangkok").hour();
       hourlyTotal[hour] += item.amount ?? 0;
 
       // Further classify by machine type
-      if (item.device.type === "Washer") {
+      if (item.device && item.device.type === "Washer") {
         hourlyWasher[hour] += item.amount ?? 0;
-      } else if (item.device.type === "Dryer") {
+      } else if (item.device && item.device.type === "Dryer") {
         hourlyDryer[hour] += item.amount ?? 0;
       }
     });
 
     // Prepare the result object with the grouped data
     const result = {
-        revenue:[
-            {
-              name: "Total",
-              type: "area",
-              data: hourlyTotal,
-            },
-            {
-              name: "Washer",
-              type: "column",
-              data: hourlyWasher,
-            },
-            {
-              name: "Dryer",
-              type: "column",
-              data: hourlyDryer,
-            }
-          ],
-        transaction:[]
-    }
+      revenue: [
+        {
+          name: "Total",
+          type: "area",
+          data: hourlyTotal,
+        },
+        {
+          name: "Washer",
+          type: "column",
+          data: hourlyWasher,
+        },
+        {
+          name: "Dryer",
+          type: "column",
+          data: hourlyDryer,
+        },
+      ],
+      transaction: [],
+    };
 
     return {
       data: result,
