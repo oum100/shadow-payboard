@@ -1,36 +1,50 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  runtimeConfig:{
+
+  runtimeConfig: {
     CYBERPAY_URL: process.env.CYBERPAY_URL,
     CYBERPAY_PARTNER_ID: process.env.CYBERPAY_PARTNER_ID,
-    CYBERPAY_SECRET: process.env.CYBERPAY_SECRET
+    CYBERPAY_SECRET: process.env.CYBERPAY_SECRET,
   },
 
   modules: [
-    'nuxt-quasar-ui',
+    "nuxt-quasar-ui",
     "@pinia/nuxt",
-    ['@nuxtjs/google-fonts', {
-      families: {
-        Sarabun: true,
-      }
-    }],
+    [
+      "@nuxtjs/google-fonts",
+      {
+        families: {
+          Sarabun: true,
+        },
+      },
+    ],
   ],
 
   quasar: {
     plugins: [
-      'BottomSheet',
-      'Dialog',
-      'Loading',
-      'LoadingBar',
-      'Notify',
-      'Dark',
+      "BottomSheet",
+      "Dialog",
+      "Loading",
+      "LoadingBar",
+      "Notify",
+      "Dark",
     ],
     extras: {
-      font: 'roboto-font',
-      fontIcons: ['material-icons-outlined'],
+      font: "roboto-font",
+      fontIcons: ["material-icons-outlined"],
+    },
+  },
+
+  vite: {
+    ssr: {
+      noExternal: ["joi"], // ให้ Vite ประมวลผล joi ฝั่ง SSR เอง
+      resolve: { conditions: ["node"] }, // กันการเผลอเลือก 'browser'
+    },
+    define: {
+      "globalThis.self": "globalThis", // safety net กัน self undefined (ชั่วคราว)
     },
   },
 
   devtools: { enabled: true },
-  compatibilityDate: '2025-02-28'
-})
+  compatibilityDate: "2025-02-28",
+});

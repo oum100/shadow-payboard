@@ -30,7 +30,7 @@
     "@prisma/client": "^5.7.1",
     "@quasar/extras": "^1.16.9",
     "@types/jsonwebtoken": "^9.0.5",
-    "apexcharts": "^3.52.0",
+    "apexcharts": "^5.3.5",
     "debug": "^4.3.4",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
@@ -40,9 +40,10 @@
     "nanoid": "^5.0.7",
     "pinia": "^2.1.7",
     "prisma": "^5.7.1",
+    "promptpay-js": "^1.0.7",
     "quasar": "^2.14.2",
     "sass": "^1.69.5",
     "vue-route": "^1.5.1",
-    "vue3-apexcharts": "^1.5.3"
+    "vue3-apexcharts": "^1.9.0"
   }
 }

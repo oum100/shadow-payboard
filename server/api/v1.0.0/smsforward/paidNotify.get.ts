@@ -43,6 +43,9 @@ export default defineEventHandler(async (event) => {
   console.log("\n");
 
   try {
+    //Matching QRrequest here then save to DB
+
+
     const saveData = await prisma.notifyMsgLog.create({
       data: data,
     });
@@ -51,7 +54,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       data: data,
     };
-  } catch (error) {
+  } catch (error:any) {
     let statusMessage = "Unknown error";
     if (
       typeof error === "object" &&

@@ -33,7 +33,7 @@ model Devices {
   merchant        Merchants     @relation(fields: [merchantCode], references: [merchantCode], onDelete: Cascade, onUpdate: Cascade)
   merchantCode    String
   branch          Branchs?      @relation(fields: [branchCode], references: [branchCode])
-  branchCode      String
+  branchCode      String?
   machineSN       Machines?
   product         Products[]
   transaction     Transactions[]
@@ -107,8 +107,8 @@ model Transactions {
   order           String
   paymentId       String?
   paymentBy       String?
-  device          Devices     @relation(fields: [deviceUuid], references: [uuid], onUpdate: Cascade)
-  deviceUuid      String
+  device          Devices?     @relation(fields: [deviceUuid], references: [uuid], onUpdate: Cascade)
+  deviceUuid      String?
   amount          Int
   status          String
   jobState        String?
